@@ -4,10 +4,7 @@ import { userSeeder } from './seeds/userSeed';
 import { companyWithAutoSeed } from './seeds/companyWithAutoSeed';
 
 async function main() {
-    await Promise.all([
-        userSeeder(2),
-        companyWithAutoSeed(3, 3),
-    ]);
+    await Promise.all([userSeeder(2), companyWithAutoSeed(3, 3)]);
     process.exit(0);
 }
 

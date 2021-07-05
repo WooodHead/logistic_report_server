@@ -11,6 +11,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "migrate:dev": "npx prisma migrate dev",
+    "migrate:reset": "npx prisma migrate reset",
     "migrate:prod": "npx prisma migrate deploy",
     "seed": "npx prisma db seed --preview-feature",
     "start:dev": "nest start --watch",

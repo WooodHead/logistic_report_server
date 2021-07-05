@@ -22,9 +22,9 @@ export const companyWithAutoSeed = async (nCompanies, nAutos) => {
                 autoNum: faker.vehicle.vrm(),
                 trailNum: faker.vehicle.vrm(),
                 driver: faker.name.findName(),
-                contact: faker.phone.phoneNumber(),
+                contact: faker.phone.phoneNumber('(0##)###-##-##'),
                 notes: faker.company.catchPhrase(),
-                brand: {
+                autoBrand: {
                     create: {
                         name: randomBrand,
                     },

@@ -37,8 +37,8 @@ model Auto {
   id        Int       @id @default(autoincrement())
   company   Company?   @relation(fields: [companyId], references: [id])
   companyId Int?
-  brand     AutoBrand? @relation(fields: [brandId], references: [id])
-  brandId   Int?
+  autoBrand     AutoBrand? @relation(fields: [autoBrandId], references: [id])
+  autoBrandId   Int?
   trailNum  String?
   autoNum   String?
   driver    String

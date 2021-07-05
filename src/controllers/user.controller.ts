@@ -13,8 +13,6 @@ export class UserController {
 
     @Post('users')
     store(@Body() userData: Prisma.UserCreateInput): Promise<UserModel> {
-        // console.log(userData);
-        // throw new Error('Lolol!');
         return this.userService.createUser(userData);
     }
 }
