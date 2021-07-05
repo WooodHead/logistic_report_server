@@ -20,27 +20,27 @@ model User {
 model Company {
   id         Int      @id @default(autoincrement())
   name       String
-  email      String
-  code       String
+  email      String?
+  code       String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  Auto       Auto[]
+  autos       Auto[]
 }
 
-model AutoMark {
+model AutoBrand {
   id   Int    @id @default(autoincrement())
   name String
-  Auto Auto[]
+  autos Auto[]
 }
 
 model Auto {
   id        Int       @id @default(autoincrement())
-  company   Company?  @relation(fields: [companyId], references: [id])
+  company   Company?   @relation(fields: [companyId], references: [id])
   companyId Int?
-  mark      AutoMark? @relation(fields: [markId], references: [id])
-  markId    Int?
+  brand     AutoBrand? @relation(fields: [brandId], references: [id])
+  brandId   Int?
+  trailNum  String?
   autoNum   String?
-  trailnum  String?
   driver    String
   contact   String
   notes     String

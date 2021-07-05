@@ -23,7 +23,8 @@ module.exports = {
     'prettier/prettier': ['error',
       {
         tabWidth: 4,
-        singleQuote: true
+        singleQuote: true,
+        printWidth: 180
       },
     ],
   },
