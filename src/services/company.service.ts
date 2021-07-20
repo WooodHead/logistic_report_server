@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
-import { Auto, Prisma } from '@prisma/client';
+import { Company, Prisma } from '@prisma/client';
 
 @Injectable()
-export class AutoService {
+export class CompanyService {
     constructor(private prisma: PrismaService) {}
     //
     // async auto(
@@ -14,16 +14,16 @@ export class AutoService {
     //     });
     // }
 
-    async autos(params: {
+    async companies(params: {
         skip?: number;
         take?: number;
-        cursor?: Prisma.AutoWhereUniqueInput;
-        where?: Prisma.AutoWhereInput;
-        orderBy?: Prisma.AutoOrderByInput;
-        include?: Prisma.AutoInclude;
-    }): Promise<Auto[]> {
+        cursor?: Prisma.CompanyWhereUniqueInput;
+        where?: Prisma.CompanyWhereInput;
+        orderBy?: Prisma.CompanyOrderByInput;
+        include?: Prisma.CompanyInclude;
+    }): Promise<Company[]> {
         const { skip, take, cursor, where, orderBy, include } = params;
-        return this.prisma.auto.findMany({
+        return this.prisma.company.findMany({
             skip,
             take,
             cursor,
@@ -33,12 +33,11 @@ export class AutoService {
         });
     }
 
-    async createAuto(data: Prisma.AutoCreateInput): Promise<Auto> {
-        console.log('create aAuto', data);
-        return this.prisma.auto.create({
-            data,
-        });
-    }
+    // async createAuto(data: Prisma.AutoCreateInput): Promise<Auto> {
+    //     return this.prisma.auto.create({
+    //         data,
+    //     });
+    // }
     //
     // async updateAuto(params: { where: Prisma.AutoWhereUniqueInput; data: Prisma.AutoUpdateInput }): Promise<Auto> {
     //     const { where, data } = params;

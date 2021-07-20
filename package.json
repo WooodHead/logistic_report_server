@@ -14,6 +14,7 @@
     "migrate:reset": "npx prisma migrate reset",
     "migrate:prod": "npx prisma migrate deploy",
     "seed": "npx prisma db seed --preview-feature",
+    "prisma:format": "npx prisma format",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

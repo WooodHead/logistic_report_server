@@ -2,14 +2,14 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const autoBrandSeeder = () => {
-    const autoMarks = [];
+    const autoBrands = [];
     ALL_AUTO_BRANDS.forEach((brand) => {
-        autoMarks.push({
+        autoBrands.push({
             name: brand,
         });
     });
-    return prisma.company.createMany({
-        data: autoMarks,
+    return prisma.autoBrand.createMany({
+        data: autoBrands,
     });
 };
 

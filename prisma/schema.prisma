@@ -24,24 +24,25 @@ model Company {
   code       String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  autos       Auto[]
+  autos      Auto[]
 }
 
 model AutoBrand {
-  id   Int    @id @default(autoincrement())
-  name String
+  id    Int    @id @default(autoincrement())
+  name  String @unique
   autos Auto[]
 }
 
 model Auto {
-  id        Int       @id @default(autoincrement())
-  company   Company?   @relation(fields: [companyId], references: [id])
-  companyId Int?
-  autoBrand     AutoBrand? @relation(fields: [autoBrandId], references: [id])
-  autoBrandId   Int?
-  trailNum  String?
-  autoNum   String?
-  driver    String
-  contact   String
-  notes     String
+  id          Int        @id @default(autoincrement())
+  company     Company?   @relation(fields: [companyId], references: [id])
+  companyId   Int?
+  autoBrand   AutoBrand? @relation(fields: [autoBrandId], references: [id])
+  autoBrandId Int?
+  trailNum    String
+  autoNum     String
+  driver      String?
+  contact     String?
+  license     String?
+  notes       String?
 }

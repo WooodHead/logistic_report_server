@@ -17,18 +17,15 @@ export const companyWithAutoSeed = async (nCompanies, nAutos) => {
         const companyAutos = [];
 
         for (let i = 0; i < nAutos; i++) {
-            const randomBrand = ALL_AUTO_BRANDS[Math.floor(Math.random() * ALL_AUTO_BRANDS.length)];
+            const randomBrand = Math.floor(Math.random() * ALL_AUTO_BRANDS.length) + 1;
             companyAutos.push({
                 autoNum: faker.vehicle.vrm(),
                 trailNum: faker.vehicle.vrm(),
                 driver: faker.name.findName(),
                 contact: faker.phone.phoneNumber('(0##)###-##-##'),
+                license: faker.random.alpha(3).toUpperCase() + faker.datatype.number(100000, 999999),
                 notes: faker.company.catchPhrase(),
-                autoBrand: {
-                    create: {
-                        name: randomBrand,
-                    },
-                },
+                autoBrandId: randomBrand,
             });
         }
 

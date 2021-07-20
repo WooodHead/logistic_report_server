@@ -16,8 +16,8 @@ export class AutoController {
         });
     }
 
-    // @Post('users')
-    // store(@Body() userData: Prisma.UserCreateInput): Promise<AutoModel> {
-    //     return this.autoService.createUser(userData);
-    // }
+    @Post('autos')
+    store(@Body() autoData: Prisma.AutoCreateInput): Promise<AutoModel> {
+        return this.autoService.createAuto(autoData);
+    }
 }
