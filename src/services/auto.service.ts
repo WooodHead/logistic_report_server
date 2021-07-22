@@ -8,7 +8,7 @@ export class AutoService {
     //
     // async auto(
     //     userWhereUniqueInput: Prisma.UserWhereUniqueInput
-    // ): Promise<Auto | null> {
+    // ): Promise<Auto.model.ts | null> {
     //     return this.prisma.auto.findUnique({
     //         where: userWhereUniqueInput,
     //     });
@@ -34,13 +34,12 @@ export class AutoService {
     }
 
     async createAuto(data: Prisma.AutoCreateInput): Promise<Auto> {
-        console.log('create aAuto', data);
         return this.prisma.auto.create({
             data,
         });
     }
     //
-    // async updateAuto(params: { where: Prisma.AutoWhereUniqueInput; data: Prisma.AutoUpdateInput }): Promise<Auto> {
+    // async updateAuto(params: { where: Prisma.AutoWhereUniqueInput; data: Prisma.AutoUpdateInput }): Promise<Auto.model.ts> {
     //     const { where, data } = params;
     //     return this.prisma.auto.update({
     //         data,
@@ -48,7 +47,7 @@ export class AutoService {
     //     });
     // }
     //
-    // async deleteAuto(where: Prisma.UserWhereUniqueInput): Promise<Auto> {
+    // async deleteAuto(where: Prisma.UserWhereUniqueInput): Promise<Auto.model.ts> {
     //     return this.prisma.auto.delete({
     //         where,
     //     });
