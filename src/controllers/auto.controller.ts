@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Auto as AutoModel, Prisma } from '@prisma/client';
 import { AutoService } from '../services/auto.service';
-import { CustomAutoCreateInput } from '../models/Auto.model';
 import { AutoBrandModel } from '../models/AutoBrand.model';
 import { CompanyModel } from '../models/Company.model';
+import { CustomAutoCreateInput } from '../validation/CustomAutoCreateInput';
 
 @Controller()
 export class AutoController {
@@ -20,7 +20,7 @@ export class AutoController {
     }
 
     @Post('autos')
-    store(@Body() autoData: CustomAutoCreateInput): Promise<AutoModel> {
+    async store(@Body() autoData: CustomAutoCreateInput): Promise<AutoModel> {
         const { autoBrand, company, ...restData } = autoData;
 
         const autoCreateInput: Prisma.AutoCreateInput = {
@@ -29,6 +29,15 @@ export class AutoController {
             company: CompanyModel.createOrConnect(company),
         };
 
-        return this.autoService.createAuto(autoCreateInput);
+        const { id } = await this.autoService.createAuto(autoCreateInput);
+
+        const params = {
+            include: {
+                company: true,
+                autoBrand: true,
+            },
+        };
+
+        return this.autoService.auto({ id }, params);
     }
 }

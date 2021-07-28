@@ -35,12 +35,12 @@ model AutoBrand {
 
 model Auto {
   id          Int        @id @default(autoincrement())
+  autoNum     String
   company     Company?   @relation(fields: [companyId], references: [id])
   companyId   Int?
   autoBrand   AutoBrand? @relation(fields: [autoBrandId], references: [id])
   autoBrandId Int?
-  trailNum    String
-  autoNum     String
+  trailNum    String?
   driver      String?
   contact     String?
   license     String?

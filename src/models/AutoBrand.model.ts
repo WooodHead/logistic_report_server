@@ -10,8 +10,8 @@ export class AutoBrandModel {
 
         return {
             connectOrCreate: {
-                create: { name: autoBrand.name },
-                where: { id: autoBrand.id },
+                create: autoBrand,
+                where: { id: autoBrand.id || 0 },
             },
         };
     }

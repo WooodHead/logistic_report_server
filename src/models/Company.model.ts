@@ -10,8 +10,8 @@ export class CompanyModel {
 
         return {
             connectOrCreate: {
-                create: { name: company.name },
-                where: { id: company.id },
+                create: company,
+                where: { id: company.id || 0 },
             },
         };
     }

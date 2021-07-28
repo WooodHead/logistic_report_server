@@ -1,18 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
-import { Auto, Prisma } from '@prisma/client';
+import { Auto, Prisma, User } from '@prisma/client';
 
 @Injectable()
 export class AutoService {
     constructor(private prisma: PrismaService) {}
-    //
-    // async auto(
-    //     userWhereUniqueInput: Prisma.UserWhereUniqueInput
-    // ): Promise<Auto.model.ts | null> {
-    //     return this.prisma.auto.findUnique({
-    //         where: userWhereUniqueInput,
-    //     });
-    // }
+
+    async auto(
+        userWhereUniqueInput: Prisma.AutoWhereUniqueInput,
+        params: {
+            include?: Prisma.AutoInclude;
+        } = {}
+    ): Promise<Auto | null> {
+        const { include } = params;
+        return this.prisma.auto.findUnique({
+            where: userWhereUniqueInput,
+            include,
+        });
+    }
 
     async autos(params: {
         skip?: number;
