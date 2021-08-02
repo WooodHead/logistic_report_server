@@ -3,7 +3,7 @@ import { Auto as AutoModel, Prisma } from '@prisma/client';
 import { AutoService } from '../services/auto.service';
 import { AutoBrandModel } from '../models/AutoBrand.model';
 import { CompanyModel } from '../models/Company.model';
-import { CustomAutoCreateInput } from '../validation/CustomAutoCreateInput';
+import { CustomAutoCreateInput } from '../validation/ModelsValidaton';
 
 @Controller()
 export class AutoController {

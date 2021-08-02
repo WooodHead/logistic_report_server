@@ -25,6 +25,7 @@ model Company {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   autos      Auto[]
+  Report     Report[]
 }
 
 model AutoBrand {
@@ -45,4 +46,32 @@ model Auto {
   contact     String?
   license     String?
   notes       String?
+}
+
+model Route {
+  id       Int      @id @default(autoincrement())
+  name     String
+  distance Int?
+  Report   Report[]
+}
+
+model Cargo {
+  id        Int      @id @default(autoincrement())
+  name      String
+  isDefault Boolean  @default(false)
+  Report    Report[]
+}
+
+model Report {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @db.Date
+  route     Route    @relation(fields: [routeId], references: [id])
+  routeId   Int
+  cargo     Cargo    @relation(fields: [cargoId], references: [id])
+  cargoId   Int
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId Int?
+  autoNum   String?
+  driver    String?
+  rate      Int?
 }

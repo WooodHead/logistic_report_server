@@ -15,6 +15,16 @@ export class CompanyModel {
             },
         };
     }
+
+    static connect(company: Prisma.CompanyUncheckedCreateInput): Prisma.CompanyCreateNestedOneWithoutReportInput {
+        if (!company) {
+            return {};
+        }
+
+        return {
+            connect: { id: company.id },
+        };
+    }
 }
 
 export class LardiCompany implements LardiCompanyInterface {
@@ -33,7 +43,7 @@ export class LardiCompany implements LardiCompanyInterface {
             positiveCommentCount: rating.positiveCommentCount,
             negativeCommentCount: rating.negativeCommentCount,
         };
-        this.refId = refId
+        this.refId = refId;
     }
 }
 
