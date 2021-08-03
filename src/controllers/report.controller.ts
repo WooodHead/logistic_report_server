@@ -6,15 +6,21 @@ import { RouteModel } from '../models/Route.model';
 import { CargoModel } from '../models/Cargo.model';
 import { response } from 'express';
 import { CustomReportCreateInput } from '../models/Report.model';
+import { RouteService } from '../services/route.service';
+import { CargoService } from '../services/cargo.service';
 
 @Controller()
 export class ReportController {
-    constructor(private readonly reportService: ReportService) {}
+    constructor(
+        private readonly reportService: ReportService,
+        private readonly routeService: RouteService,
+        private readonly cargoService: CargoService
+    ) {}
 
     @Get('reports')
     index(): Promise<ReportModel[]> {
         return this.reportService.reports({
-            include: { company: true, route: true, cargo: true },
+            include: { autoOwner: true, cargoOwner: true, route: true, cargo: true },
         });
     }
 
@@ -24,16 +30,21 @@ export class ReportController {
         reportData: CustomReportCreateInput[]
     ) {
         const butchData: Prisma.ReportCreateInput[] = [];
+        const { route, cargo } = reportData[0]; // TODo? [0]
 
-        reportData.forEach((reportData: CustomReportCreateInput) => {
-            const { route, cargo, company, date, ...restData } = reportData;
+        const routeFromDb = await this.routeService.findOrCreateRoute(route);
+        const cargoFromDb = await this.cargoService.findOrCreateCargo(cargo);
+
+        reportData.forEach((report: CustomReportCreateInput) => {
+            const { autoOwner, cargoOwner, date, ...restData } = report;
 
             butchData.push({
                 ...restData,
                 date: new Date(date),
-                route: RouteModel.createOrConnect(route),
-                cargo: CargoModel.createOrConnect(cargo),
-                company: CompanyModel.connect(company),
+                route: RouteModel.createOrConnect(routeFromDb),
+                cargo: CargoModel.createOrConnect(cargoFromDb),
+                autoOwner: CompanyModel.connectAutoOwner(autoOwner),
+                cargoOwner: CompanyModel.connectCargoOwner(cargoOwner),
             });
         });
 

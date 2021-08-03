@@ -23,7 +23,19 @@ export class CompanyModel {
         };
     }
 
-    static connect(company: Prisma.CompanyUncheckedCreateInput): Prisma.CompanyCreateNestedOneWithoutReportInput {
+    static connectAutoOwner(
+        company: Prisma.CompanyUncheckedCreateInput
+    ): Prisma.CompanyCreateNestedOneWithoutReportForAutoOwnerInput {
+        return this.connectCompany(company);
+    }
+
+    static connectCargoOwner(
+        company: Prisma.CompanyUncheckedCreateInput
+    ): Prisma.CompanyCreateNestedOneWithoutReportForCargoOwnerInput {
+        return this.connectCompany(company);
+    }
+
+    private static connectCompany(company: Prisma.CompanyUncheckedCreateInput) {
         if (!company) {
             return {};
         }

@@ -31,8 +31,16 @@ export class RouteService {
         });
     }
 
-    // async createAuto(data: Prisma.AutoCreateInput): Promise<Auto.model.ts> {
-    //     return this.prisma.auto.create({
+    async findOrCreateRoute(data: Prisma.RouteUncheckedCreateInput): Promise<Route> {
+        return this.prisma.route.upsert({
+            where: { id: data.id || 0 },
+            update: {},
+            create: data,
+        });
+    }
+
+    // async createRoute(data: Prisma.RouteCreateInput): Promise<Route> {
+    //     return this.prisma.route.create({
     //         data,
     //     });
     // }

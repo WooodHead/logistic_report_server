@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
-import { Cargo, Prisma } from '@prisma/client';
+import { Cargo, Prisma, Route } from '@prisma/client';
 
 @Injectable()
 export class CargoService {
@@ -28,6 +28,14 @@ export class CargoService {
             cursor,
             where,
             orderBy,
+        });
+    }
+
+    async findOrCreateCargo(data: Prisma.CargoUncheckedCreateInput): Promise<Cargo> {
+        return this.prisma.cargo.upsert({
+            where: { id: data.id || 0 },
+            update: {},
+            create: data,
         });
     }
 

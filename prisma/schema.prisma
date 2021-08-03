@@ -18,14 +18,15 @@ model User {
 }
 
 model Company {
-  id         Int      @id @default(autoincrement())
-  name       String?
-  email      String?
-  code       String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  autos      Auto[]
-  Report     Report[]
+  id                  Int      @id @default(autoincrement())
+  name                String?
+  email               String?
+  code                String?
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  autos               Auto[]
+  reportForAutoOwner  Report[] @relation("autoOwner")
+  reportForCargoOwner Report[] @relation("cargoOwner")
 }
 
 model AutoBrand {
@@ -63,15 +64,17 @@ model Cargo {
 }
 
 model Report {
-  id        Int      @id @default(autoincrement())
-  date      DateTime @db.Date
-  route     Route    @relation(fields: [routeId], references: [id])
-  routeId   Int
-  cargo     Cargo    @relation(fields: [cargoId], references: [id])
-  cargoId   Int
-  company   Company? @relation(fields: [companyId], references: [id])
-  companyId Int?
-  autoNum   String?
-  driver    String?
-  rate      Int?
+  id           Int      @id @default(autoincrement())
+  date         DateTime @db.Date
+  route        Route    @relation(fields: [routeId], references: [id])
+  routeId      Int
+  cargo        Cargo    @relation(fields: [cargoId], references: [id])
+  cargoId      Int
+  autoOwner    Company? @relation("autoOwner", fields: [autoOwnerId], references: [id])
+  autoOwnerId  Int?
+  cargoOwner   Company? @relation("cargoOwner", fields: [cargoOwnerId], references: [id])
+  cargoOwnerId Int?
+  autoNum      String?
+  driver       String?
+  rate         Int?
 }

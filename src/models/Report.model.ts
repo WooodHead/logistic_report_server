@@ -15,5 +15,6 @@ export class CustomReportCreateInput {
     route: Prisma.RouteUncheckedCreateInput;
     @IsNotEmpty()
     cargo: Prisma.CargoUncheckedCreateInput;
-    company?: Prisma.CompanyUncheckedCreateInput | null;
+    autoOwner?: Prisma.CompanyUncheckedCreateInput | null;
+    cargoOwner?: Prisma.CompanyUncheckedCreateInput | null;
 }
