@@ -1,11 +1,18 @@
 import { Prisma } from '@prisma/client';
+import { IsNotEmpty, ValidateIf } from 'class-validator';
+
+export class CustomCompanyCreateInput implements Prisma.CompanyUncheckedCreateInput {
+    name?: string;
+    email?: string;
+    code?: string;
+}
 
 export class CompanyModel {
     static createOrConnect(
         company: Prisma.CompanyUncheckedCreateInput
     ): Prisma.CompanyCreateNestedOneWithoutAutosInput {
         if (!company) {
-            return {};
+            return;
         }
 
         return {

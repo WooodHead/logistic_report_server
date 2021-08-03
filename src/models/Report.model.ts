@@ -1,30 +1,19 @@
-// import { Report } from '@prisma/client';
-// import { Exclude } from 'class-transformer';
-//
-// export class ReportModelResponse implements Report {
-//     id: number;
-//     date: Date;
-//     routeId: number;
-//     cargoId: number;
-//     companyId: number;
-//     autoNum: string;
-//     @Exclude()
-//     driver: string;
-//     @Exclude()
-//     rate: number;
-//
-//     constructor(partial: Partial<ReportModelResponse>) {
-//         Object.assign(this, partial);
-//     }
+import { IsNotEmpty } from 'class-validator';
+import { Prisma } from '@prisma/client';
+import { Transform } from 'class-transformer';
 
-    // id: number;
-    // firstName: string;
-    // lastName: string;
-    //
-    // @Exclude()
-    // password: string;
-    //
-    // constructor(partial: Partial<UserEntity>) {
-    //     Object.assign(this, partial);
-    // }
-// }
+export class CustomReportCreateInput {
+    @IsNotEmpty()
+    date: Date | string;
+    autoNum?: string | null;
+    driver?: string | null;
+    @Transform(({ value }) => {
+        return value ? parseInt(value, 10) : value;
+    })
+    rate?: number | null;
+    @IsNotEmpty()
+    route: Prisma.RouteUncheckedCreateInput;
+    @IsNotEmpty()
+    cargo: Prisma.CargoUncheckedCreateInput;
+    company?: Prisma.CompanyUncheckedCreateInput | null;
+}

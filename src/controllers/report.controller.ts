@@ -2,10 +2,10 @@ import { Body, Controller, Get, ParseArrayPipe, Post } from '@nestjs/common';
 import { Report as ReportModel, Prisma } from '@prisma/client';
 import { ReportService } from '../services/report.service';
 import { CompanyModel } from '../models/Company.model';
-import { CustomReportCreateInput } from '../validation/ModelsValidaton';
 import { RouteModel } from '../models/Route.model';
 import { CargoModel } from '../models/Cargo.model';
 import { response } from 'express';
+import { CustomReportCreateInput } from '../models/Report.model';
 
 @Controller()
 export class ReportController {
@@ -23,7 +23,6 @@ export class ReportController {
         @Body(new ParseArrayPipe({ items: CustomReportCreateInput }))
         reportData: CustomReportCreateInput[]
     ) {
-        console.log("-> reportData", reportData);
         const butchData: Prisma.ReportCreateInput[] = [];
 
         reportData.forEach((reportData: CustomReportCreateInput) => {
