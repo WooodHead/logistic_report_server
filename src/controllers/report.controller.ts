@@ -1,27 +1,33 @@
-import { Body, Controller, Get, ParseArrayPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, ParseArrayPipe, Post, UseInterceptors } from '@nestjs/common';
 import { Report as ReportModel, Prisma } from '@prisma/client';
 import { ReportService } from '../services/report.service';
 import { CompanyModel } from '../models/Company.model';
 import { RouteModel } from '../models/Route.model';
 import { CargoModel } from '../models/Cargo.model';
 import { response } from 'express';
-import { CustomReportCreateInput } from '../models/Report.model';
+import { CustomReportCreateInput, ReportResponse } from '../models/Report.model';
 import { RouteService } from '../services/route.service';
 import { CargoService } from '../services/cargo.service';
+import { MomentService } from '../services/moment.service';
+import { DateFormatInterceptor } from '../interceptors/dateFormat.interceptor';
 
 @Controller()
 export class ReportController {
     constructor(
         private readonly reportService: ReportService,
         private readonly routeService: RouteService,
-        private readonly cargoService: CargoService
+        private readonly cargoService: CargoService,
+        private readonly momentService: MomentService
     ) {}
 
+    @UseInterceptors(DateFormatInterceptor)
     @Get('reports')
-    index(): Promise<ReportModel[]> {
-        return this.reportService.reports({
+    async index(): Promise<ReportModel[]> {
+        const reports = await this.reportService.reports({
             include: { autoOwner: true, cargoOwner: true, route: true, cargo: true },
         });
+
+        return reports;
     }
 
     @Post('reports')
