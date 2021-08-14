@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 import { ALL_AUTO_BRANDS } from './autoBrandSeed';
 // const faker = require('faker')
 import * as faker from 'faker/locale/ru';
+import { randomFromOneTo } from '../../src/utils/utils';
 
 export const companyWithAutoSeed = async (nCompanies, nAutos) => {
     const companiesWithAutos = [];
@@ -20,7 +21,6 @@ export const companyWithAutoSeed = async (nCompanies, nAutos) => {
         const companyAutos = [];
 
         for (let i = 0; i < nAutos; i++) {
-            const randomBrand = Math.floor(Math.random() * ALL_AUTO_BRANDS.length) + 1;
             companyAutos.push({
                 autoNum: faker.vehicle.vrm(),
                 trailNum: faker.vehicle.vrm(),
@@ -28,7 +28,7 @@ export const companyWithAutoSeed = async (nCompanies, nAutos) => {
                 contact: faker.phone.phoneNumber('(0##)###-##-##'),
                 license: faker.random.alpha(3).toUpperCase() + faker.datatype.number(100000, 999999),
                 notes: faker.company.catchPhrase(),
-                autoBrandId: randomBrand,
+                autoBrandId: randomFromOneTo(ALL_AUTO_BRANDS.length),
             });
         }
 
