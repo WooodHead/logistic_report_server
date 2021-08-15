@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { Auto as AutoModel, Prisma } from '@prisma/client';
 import { AutoService } from '../services/auto.service';
 import { AutoBrandModel } from '../models/AutoBrand.model';
 import { CompanyModel } from '../models/Company.model';
-import { CustomAutoCreateInput } from '../models/Auto.model';
+import { CustomAutoCreateInput, CustomAutoUpdateInput } from '../models/Auto.model';
 
 @Controller()
 export class AutoController {
@@ -17,6 +17,28 @@ export class AutoController {
                 autoBrand: true,
             },
         });
+    }
+
+    @Put('autos')
+    async update(@Body() autoData: CustomAutoUpdateInput): Promise<AutoModel> {
+        const { autoBrand, company, id, companyId, autoBrandId, ...restData } = autoData;
+
+        const autoUpdateInput: Prisma.AutoUpdateInput = {
+            ...restData,
+            autoBrand: AutoBrandModel.update(autoBrand),
+            company: CompanyModel.update(company),
+        };
+
+        await this.autoService.updateAuto({
+            where: { id },
+            data: autoUpdateInput,
+        });
+
+        const params = {
+            include: { company: true, autoBrand: true },
+        };
+
+        return this.autoService.auto({ id }, params);
     }
 
     @Post('autos')

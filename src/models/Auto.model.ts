@@ -21,3 +21,14 @@ export class CustomAutoCreateInput implements Prisma.AutoUncheckedCreateInput {
     @Type(() => CustomAutoBrandCreateInput)
     autoBrand?: CustomAutoBrandCreateInput | null;
 }
+
+export class CustomAutoUpdateInput extends CustomAutoCreateInput {
+    @IsNotEmpty()
+    id: number;
+    companyId: number;
+    autoBrandId: number;
+
+    constructor() {
+        super();
+    }
+}

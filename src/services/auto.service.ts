@@ -43,14 +43,14 @@ export class AutoService {
             data,
         });
     }
-    //
-    // async updateAuto(params: { where: Prisma.AutoWhereUniqueInput; data: Prisma.AutoUpdateInput }): Promise<Auto.model.ts> {
-    //     const { where, data } = params;
-    //     return this.prisma.auto.update({
-    //         data,
-    //         where,
-    //     });
-    // }
+
+    async updateAuto(params: { where: Prisma.AutoWhereUniqueInput; data: Prisma.AutoUpdateInput }): Promise<Auto> {
+        const { where, data } = params;
+        return this.prisma.auto.update({
+            data,
+            where,
+        });
+    }
     //
     // async deleteAuto(where: Prisma.UserWhereUniqueInput): Promise<Auto.model.ts> {
     //     return this.prisma.auto.delete({

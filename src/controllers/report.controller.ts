@@ -1,11 +1,11 @@
 import { Body, Controller, Get, ParseArrayPipe, Post, UseInterceptors } from '@nestjs/common';
-import { Report as ReportModel, Prisma } from '@prisma/client';
+import { Prisma, Report as ReportModel } from '@prisma/client';
 import { ReportService } from '../services/report.service';
 import { CompanyModel } from '../models/Company.model';
 import { RouteModel } from '../models/Route.model';
 import { CargoModel } from '../models/Cargo.model';
 import { response } from 'express';
-import { CustomReportCreateInput, ReportResponse } from '../models/Report.model';
+import { CustomReportCreateInput } from '../models/Report.model';
 import { RouteService } from '../services/route.service';
 import { CargoService } from '../services/cargo.service';
 import { MomentService } from '../services/moment.service';
@@ -23,11 +23,9 @@ export class ReportController {
     @UseInterceptors(DateFormatInterceptor)
     @Get('reports')
     async index(): Promise<ReportModel[]> {
-        const reports = await this.reportService.reports({
+        return await this.reportService.reports({
             include: { autoOwner: true, cargoOwner: true, route: true, cargo: true },
         });
-
-        return reports;
     }
 
     @Post('reports')
@@ -49,8 +47,8 @@ export class ReportController {
                 date: new Date(date),
                 route: RouteModel.createOrConnect(routeFromDb),
                 cargo: CargoModel.createOrConnect(cargoFromDb),
-                autoOwner: CompanyModel.connectAutoOwner(autoOwner),
-                cargoOwner: CompanyModel.connectCargoOwner(cargoOwner),
+                autoOwner: CompanyModel.connectCompany(autoOwner),
+                cargoOwner: CompanyModel.createOrConnect(cargoOwner),
             });
         });
 

@@ -8,6 +8,26 @@ export class CustomCompanyCreateInput implements Prisma.CompanyUncheckedCreateIn
 }
 
 export class CompanyModel {
+    static update(company: Prisma.CompanyUncheckedCreateInput): Prisma.CompanyUpdateOneWithoutAutosInput {
+        if (!company) {
+            return;
+        }
+
+        return {
+            update: company,
+        };
+    }
+
+    static connectCompany(company: Prisma.CompanyUncheckedCreateInput) {
+        if (!company) {
+            return {};
+        }
+
+        return {
+            connect: { id: company.id },
+        };
+    }
+
     static createOrConnect(
         company: Prisma.CompanyUncheckedCreateInput
     ): Prisma.CompanyCreateNestedOneWithoutAutosInput {
@@ -23,27 +43,26 @@ export class CompanyModel {
         };
     }
 
-    static connectAutoOwner(
-        company: Prisma.CompanyUncheckedCreateInput
-    ): Prisma.CompanyCreateNestedOneWithoutReportForAutoOwnerInput {
-        return this.connectCompany(company);
-    }
+    // static connectAutoOwner(
+    //     company: Prisma.CompanyUncheckedCreateInput
+    // ): Prisma.CompanyCreateNestedOneWithoutReportForAutoOwnerInput {
+    //     return this.connectCompany(company);
+    // }
 
-    static connectCargoOwner(
-        company: Prisma.CompanyUncheckedCreateInput
-    ): Prisma.CompanyCreateNestedOneWithoutReportForCargoOwnerInput {
-        return this.connectCompany(company);
-    }
-
-    private static connectCompany(company: Prisma.CompanyUncheckedCreateInput) {
-        if (!company) {
-            return {};
-        }
-
-        return {
-            connect: { id: company.id },
-        };
-    }
+    // static createOrConnectCargoOwner(
+    //     company: Prisma.CompanyUncheckedCreateInput
+    // ): Prisma.CompanyCreateNestedOneWithoutReportForCargoOwnerInput {
+    //     if (!company) {
+    //         return;
+    //     }
+    //
+    //     return {
+    //         connectOrCreate: {
+    //             create: company,
+    //             where: { id: company.id || 0 },
+    //         },
+    //     };
+    // }
 }
 
 export class LardiCompany implements LardiCompanyInterface {
