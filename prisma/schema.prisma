@@ -78,4 +78,5 @@ model Report {
   autoNum      String?
   driver       String?
   rate         Int?
+  created_at   DateTime @default(now())
 }

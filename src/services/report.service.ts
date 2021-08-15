@@ -24,7 +24,7 @@ export class ReportService {
         take?: number;
         cursor?: Prisma.ReportWhereUniqueInput;
         where?: Prisma.ReportWhereInput;
-        orderBy?: Prisma.ReportOrderByInput;
+        orderBy?: Prisma.ReportOrderByInput[];
         include?: Prisma.ReportInclude;
     }): Promise<Report[]> {
         const { skip, take, cursor, where, orderBy, include } = params;

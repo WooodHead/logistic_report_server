@@ -25,6 +25,7 @@ export class ReportController {
     async index(): Promise<ReportModel[]> {
         return await this.reportService.reports({
             include: { autoOwner: true, cargoOwner: true, route: true, cargo: true },
+            orderBy: [{ date: Prisma.SortOrder.desc }, { created_at: Prisma.SortOrder.asc }],
         });
     }
 
