@@ -18,6 +18,7 @@ import { CargoService } from './services/cargo.service';
 import { ReportController } from './controllers/report.controller';
 import { ReportService } from './services/report.service';
 import { MomentService } from './services/moment.service';
+import { FileExportsService } from './services/fileExports.service';
 
 @Module({
     imports: [HttpModule],
@@ -41,7 +42,7 @@ import { MomentService } from './services/moment.service';
         RouteService,
         CargoService,
         ReportService,
-        MomentService,
+        MomentService
     ],
 })
 export class AppModule {}
