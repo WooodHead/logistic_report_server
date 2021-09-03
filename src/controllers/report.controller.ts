@@ -1,4 +1,4 @@
-import { Body, Controller, Get, ParseArrayPipe, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, ParseArrayPipe, Post, Query, UseInterceptors } from '@nestjs/common';
 import { Prisma, Report as ReportModel } from '@prisma/client';
 import { ReportService } from '../services/report.service';
 import { CompanyModel } from '../models/Company.model';
@@ -22,9 +22,12 @@ export class ReportController {
 
     @UseInterceptors(DateFormatInterceptor)
     @Get('reports')
-    async index(): Promise<ReportModel[]> {
+    async index(@Query('from') from, @Query('to') to): Promise<ReportModel[]> {
         return await this.reportService.reports({
             include: { autoOwner: true, cargoOwner: true, route: true, cargo: true },
+            where: {
+                date: { gte: new Date(from), lte: new Date(to) },
+            },
             orderBy: [{ date: Prisma.SortOrder.desc }, { created_at: Prisma.SortOrder.asc }],
         });
     }
