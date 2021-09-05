@@ -9,7 +9,7 @@ export const reportSeeder = async (nReports, nCompanies) => {
     const reports = [];
 
     for (let r = 0; r < nReports; r++) {
-        const startDate = new Date(2021, 1, 1);
+        const startDate = new Date(2020, 1, 1);
         const endDate = new Date();
         const rate = randomNumber(100, 1000);
 

@@ -15,7 +15,7 @@ async function main() {
     await companyWithAutoSeed(TOTAL_COMPANIES, 150);
     await cargoSeeder();
     await routeSeeder();
-    await reportSeeder(30000, TOTAL_COMPANIES);
+    await reportSeeder(1000, TOTAL_COMPANIES);
 
     process.exit(0);
 }

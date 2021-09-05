@@ -56,6 +56,9 @@ export class ReportService {
     //         orderBy,
     //     });
     // }
+    async rawQuery(query: string) {
+        return this.prisma.$queryRaw(query);
+    }
 
     async createReports(data: Prisma.ReportCreateInput[]): Promise<Report[]> {
         const butchOfPromises = data.map((reportData: Prisma.ReportCreateInput) => {

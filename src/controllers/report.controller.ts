@@ -34,6 +34,10 @@ export class ReportController {
     @UseInterceptors(DateFormatInterceptor)
     @Get('reports')
     async index(@Query('from') from, @Query('to') to): Promise<ReportModel[]> {
+        // ToDo make Pipe
+        if (!Date.parse(from) || !Date.parse(to)) {
+            return [];
+        }
         return await this.reportService.reports({
             include: { autoOwner: true, cargoOwner: true, route: true, cargo: true },
             where: {

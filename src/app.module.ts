@@ -19,6 +19,7 @@ import { ReportController } from './controllers/report.controller';
 import { ReportService } from './services/report.service';
 import { MomentService } from './services/moment.service';
 import { FileExportsService } from './services/fileExports.service';
+import { ChartsController } from './controllers/charts.controller';
 
 @Module({
     imports: [HttpModule],
@@ -31,6 +32,7 @@ import { FileExportsService } from './services/fileExports.service';
         RouteController,
         CargoController,
         ReportController,
+        ChartsController
     ],
     providers: [
         UserService,
@@ -42,7 +44,7 @@ import { FileExportsService } from './services/fileExports.service';
         RouteService,
         CargoService,
         ReportService,
-        MomentService
+        MomentService,
     ],
 })
 export class AppModule {}
