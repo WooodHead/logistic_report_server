@@ -20,7 +20,7 @@ import { CargoService } from '../services/cargo.service';
 import { MomentService } from '../services/moment.service';
 import { DateFormatInterceptor } from '../interceptors/dateFormat.interceptor';
 import { groupBy as _groupBy, maxBy as _maxBy } from 'lodash';
-import { maxFrequencyInArray } from '../utils/utils';
+import { extractFromToday, maxFrequencyInArray } from '../utils/utils';
 
 @Controller()
 export class ChartsController {
@@ -31,39 +31,45 @@ export class ChartsController {
         private readonly momentService: MomentService
     ) {}
 
-    // @UseInterceptors(DateFormatInterceptor)
     @Get('charts/amount-per-year')
     async amountPerYear(): Promise<any> {
         const curYearGroupByMonth = await this.reportService.rawQuery(`
-            SELECT MONTH(date), COUNT(id) FROM Report as t
+            SELECT MONTH(date), COUNT(id) as amount FROM Report as t
             WHERE YEAR(t.date) = YEAR(CURRENT_DATE())
             GROUP BY MONTH(date);
         `);
         const prevYearGroupByMonth = await this.reportService.rawQuery(`
-            SELECT MONTH(date), COUNT(id) FROM Report as t
+            SELECT MONTH(date), COUNT(id) as amount FROM Report as t
             WHERE YEAR(t.date) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR))
             GROUP BY MONTH(date);
         `);
 
-        const curYearChart = curYearGroupByMonth.map((val) => val['COUNT(id)']);
-        const prevYearChart = prevYearGroupByMonth.map((val) => val['COUNT(id)']);
-
-        // // ToDo make Pipe
-        // if (!Date.parse(from) || !Date.parse(to)) {
-        //     return [];
-        // }
-        // return await this.reportService.reports({
-        //     include: { autoOwner: true, cargoOwner: true, route: true, cargo: true },
-        //     where: {
-        //         date: { gte: new Date(from), lte: new Date(to) },
-        //     },
-        //     orderBy: [{ date: Prisma.SortOrder.desc }, { created_at: Prisma.SortOrder.asc }],
-        // });
-        // const reports = await this.reportService.reportsGroupBy(['date', 'id'], {});
-        // const groupedByYear = _groupBy(reports, (val) => new Date(val.date).getFullYear());
-        // console.log("-> curYearGroupByMonth", curYearCount);
-        // console.log("-> prevYearGroupByMonth", prevYearCount);
+        const curYearChart = curYearGroupByMonth.map((val) => val.amount);
+        const prevYearChart = prevYearGroupByMonth.map((val) => val.amount);
         return { curYearChart, prevYearChart };
+    }
+
+    @Get('charts/top-routes')
+    async topRoutes(): Promise<any> {
+        const thisYear = await this.reportService.rawQuery(`
+            SELECT routeId, COUNT(t.id) as amountThisYear, R.name FROM Report as t
+            JOIN Route R on t.routeId = R.id
+            WHERE date BETWEEN DATE_SUB(NOW(), INTERVAL 31 DAY) AND NOW()
+            GROUP BY routeId ORDER BY COUNT(t.id) DESC LIMIT 5;
+        `);
+        const prevYear = await this.reportService.rawQuery(`
+            SELECT routeId, COUNT(t.id) as amountPrevYear, R.name FROM Report as t
+            JOIN Route R on t.routeId = R.id
+            WHERE date BETWEEN DATE_SUB(DATE_SUB(CURDATE(), INTERVAL 1 YEAR), INTERVAL 31 DAY) AND DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+            GROUP BY routeId ORDER BY COUNT(t.id) DESC;
+        `);
+
+        return thisYear.map((repThisYear) => {
+            const findInPrev = prevYear.find((repPrevYear) => repThisYear.routeId === repPrevYear.routeId);
+            repThisYear.amountPrevYear = findInPrev ? findInPrev.amountPrevYear : 0;
+            repThisYear.amountThisYear = repThisYear.amountThisYear || 0;
+            return repThisYear;
+        });
     }
     // @HttpCode(HttpStatus.OK)
     // @Post('reports/history')

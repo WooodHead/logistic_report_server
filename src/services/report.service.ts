@@ -38,24 +38,25 @@ export class ReportService {
         });
     }
 
-    // async reportsGroupBy(
-    //     by = [],
-    //     params: {
-    //         skip?: number;
-    //         take?: number;
-    //         where?: Prisma.ReportWhereInput;
-    //         orderBy?: Prisma.ReportOrderByInput[];
-    //     }
-    // ) {
-    //     const { skip, take, where, orderBy } = params;
-    //     return this.prisma.report.groupBy({
-    //         by,
-    //         skip,
-    //         take,
-    //         where,
-    //         orderBy,
-    //     });
-    // }
+    async reportsGroupBy(
+        by = [],
+        params: {
+            skip?: number;
+            take?: number;
+            where?: Prisma.ReportWhereInput;
+            orderBy?: Prisma.ReportOrderByInput[];
+        }
+    ) {
+        const { skip, take, where, orderBy } = params;
+        return this.prisma.report.groupBy({
+            by,
+            skip,
+            take,
+            where,
+            orderBy,
+        });
+    }
+
     async rawQuery(query: string) {
         return this.prisma.$queryRaw(query);
     }
