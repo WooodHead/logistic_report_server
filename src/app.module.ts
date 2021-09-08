@@ -18,8 +18,10 @@ import { CargoService } from './services/cargo.service';
 import { ReportController } from './controllers/report.controller';
 import { ReportService } from './services/report.service';
 import { MomentService } from './services/moment.service';
-import { FileExportsService } from './services/fileExports.service';
 import { ChartsController } from './controllers/charts.controller';
+import { AuthController } from './controllers/auth.controller';
+import { AuthService } from './services/auth.service';
+import { UniqueEmailProvider } from './providers/UniqueEmail.provider';
 
 @Module({
     imports: [HttpModule],
@@ -32,7 +34,8 @@ import { ChartsController } from './controllers/charts.controller';
         RouteController,
         CargoController,
         ReportController,
-        ChartsController
+        ChartsController,
+        AuthController,
     ],
     providers: [
         UserService,
@@ -45,6 +48,8 @@ import { ChartsController } from './controllers/charts.controller';
         CargoService,
         ReportService,
         MomentService,
+        AuthService,
+        UniqueEmailProvider,
     ],
 })
 export class AppModule {}

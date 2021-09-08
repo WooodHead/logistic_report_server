@@ -1,54 +1,39 @@
-import { ExceptionFilter, Catch, HttpException, ArgumentsHost, HttpStatus } from '@nestjs/common';
-import { BadRequestException } from '@nestjs/common';
+import {
+    ExceptionFilter,
+    Catch,
+    HttpException,
+    ArgumentsHost,
+    HttpStatus,
+    Logger,
+} from '@nestjs/common';
+import { Request, Response } from 'express';
 
 @Catch()
 export class ErrorFilter implements ExceptionFilter {
-    catch(error: Error, host: ArgumentsHost) {
-        const response = host.switchToHttp().getResponse();
-        console.error(error);
-        // TODO!
-        let status;
+    private readonly logger = new Logger(ErrorFilter.name);
 
-        if (error instanceof BadRequestException) {
-            // console.log(error.getResponse());
-            // const { message } = error.getResponse();
-            // const resMsg = message.map(msg => ({ property: msg.property, error: msg.constraints }))
-            // console.log("-> message", message);
-            return response.status(HttpStatus.BAD_REQUEST).json(error);
-        }
+    catch(exception: Error, host: ArgumentsHost) {
+        const ctx = host.switchToHttp();
+        const response = ctx.getResponse<Response>();
+        const request = ctx.getRequest<Request>();
+        let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+        let errorMsg: string | Record<string, any> = 'Internal server error';
 
-        // handle status
-        if (error instanceof HttpException) {
-            status = error.getStatus();
-        }
-        // else if (error instanceof PrismaClientValidationError) {
-            // status = HttpStatus.UNPROCESSABLE_ENTITY;
-        // }
-        else {
-            status = HttpStatus.INTERNAL_SERVER_ERROR;
+        if (exception instanceof HttpException) {
+            let { message } = exception.getResponse() as { message: string };
+            message = Array.isArray(message) ? message.pop() : message;
+            statusCode = exception.getStatus();
+            errorMsg = message || exception.getResponse() || errorMsg;
+            this.logger.error(`${exception.message}. Message: ${JSON.stringify(errorMsg)}`);
+        } else {
+            this.logger.error(exception, exception.stack);
         }
 
-        // if (status === HttpStatus.BAD_REQUEST) {
-        //     console.log(error);
-        //     return response.status(status).json(error);
-        // }
-        // handle message
-        if (status === HttpStatus.UNAUTHORIZED) {
-            return response.status(status).render('views/401');
-        }
-        if (status === HttpStatus.NOT_FOUND) {
-            return response.status(status).render('views/404');
-        }
-        if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-            if (process.env.NODE_ENV === 'production') {
-                console.error(error.stack);
-                return response.status(status).render('views/500');
-            } else {
-                const message = error.stack;
-                return response.status(status).json('Server error');
-            }
-        }
-
-        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json('Server error');
+        response.status(statusCode).json({
+            statusCode,
+            message: errorMsg,
+            timestamp: new Date().toISOString(),
+            path: request.url,
+        });
     }
 }

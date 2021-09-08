@@ -51,4 +51,9 @@ export class UserService {
             where,
         });
     }
+
+    async isEmailAlreadyExists(email: string): Promise<boolean> {
+        const user = await this.user({ email });
+        return !user;
+    }
 }
