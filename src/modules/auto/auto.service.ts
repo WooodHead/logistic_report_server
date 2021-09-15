@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../../services/prisma.service';
 import { Auto, Prisma } from '@prisma/client';
 
 @Injectable()
@@ -44,7 +44,10 @@ export class AutoService {
         });
     }
 
-    async updateAuto(params: { where: Prisma.AutoWhereUniqueInput; data: Prisma.AutoUpdateInput }): Promise<Auto> {
+    async updateAuto(params: {
+        where: Prisma.AutoWhereUniqueInput;
+        data: Prisma.AutoUpdateInput;
+    }): Promise<Auto> {
         const { where, data } = params;
         return this.prisma.auto.update({
             data,

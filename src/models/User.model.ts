@@ -3,7 +3,7 @@ import { Prisma } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
 import { CustomCompanyCreateInput } from './Company.model';
 import { CustomAutoBrandCreateInput } from './AutoBrand.model';
-import { UniqueEmail } from '../providers/UniqueEmail.provider';
+import { UniqueEmail } from '../modules/auth/uniqueEmail.provider';
 
 export class UserDto implements Prisma.UserUncheckedCreateInput {
     @IsNotEmpty()

@@ -57,8 +57,8 @@ export class ReportService {
         });
     }
 
-    async rawQuery(query: string) {
-        return this.prisma.$queryRaw(query);
+    async rawQuery(query: string): Promise<any[]> {
+        return this.prisma.$queryRaw`${query}`;
     }
 
     async createReports(data: Prisma.ReportCreateInput[]): Promise<Report[]> {

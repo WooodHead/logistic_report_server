@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
-import { Auto, Prisma } from '@prisma/client';
+import { PrismaService } from '../../services/prisma.service';
+import { User, Prisma } from '@prisma/client';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private userService: UserService) {}
 
-    // async
+    async validateUser(email: string, pass: string): Promise<Partial<User> | null> {
+        const user: User = await this.userService.user({ email });
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...restUser } = user;
+        return user && user.password === pass ? restUser : null;
+    }
     //
     // async auto(
     //     userWhereUniqueInput: Prisma.AutoWhereUniqueInput,

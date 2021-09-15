@@ -1,9 +1,5 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './controllers/user.controller';
-import { UserService } from './services/user.service';
 import { PrismaService } from './services/prisma.service';
-import { AutoController } from './controllers/auto.controller';
-import { AutoService } from './services/auto.service';
 import { CompanyController } from './controllers/company.controller';
 import { CompanyService } from './services/company.service';
 import { AutoBrandController } from './controllers/autoBrand.controller';
@@ -19,15 +15,16 @@ import { ReportController } from './controllers/report.controller';
 import { ReportService } from './services/report.service';
 import { MomentService } from './services/moment.service';
 import { ChartsController } from './controllers/charts.controller';
-import { AuthController } from './controllers/auth.controller';
-import { AuthService } from './services/auth.service';
-import { UniqueEmailProvider } from './providers/UniqueEmail.provider';
+import { AuthModule } from './modules/auth/auth.module';
+import { AutoModule } from './modules/auto/auto.module';
 
 @Module({
-    imports: [HttpModule],
+    imports: [
+        HttpModule,
+        AuthModule,
+        AutoModule
+    ],
     controllers: [
-        UserController,
-        AutoController,
         CompanyController,
         AutoBrandController,
         LardiTransController,
@@ -35,11 +32,8 @@ import { UniqueEmailProvider } from './providers/UniqueEmail.provider';
         CargoController,
         ReportController,
         ChartsController,
-        AuthController,
     ],
     providers: [
-        UserService,
-        AutoService,
         PrismaService,
         CompanyService,
         AutoBrandService,
@@ -48,8 +42,6 @@ import { UniqueEmailProvider } from './providers/UniqueEmail.provider';
         CargoService,
         ReportService,
         MomentService,
-        AuthService,
-        UniqueEmailProvider,
     ],
 })
 export class AppModule {}
