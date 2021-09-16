@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Route as RouteModel, Prisma } from '@prisma/client';
-import { RouteService } from '../services/route.service';
+import { RouteService } from './route.service';
 
 @Controller()
 export class RouteController {

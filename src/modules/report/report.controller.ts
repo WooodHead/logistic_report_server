@@ -10,25 +10,24 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { Prisma, Report as ReportModel } from '@prisma/client';
-import { ReportService } from '../services/report.service';
-import { CompanyModel } from '../models/Company.model';
-import { RouteModel } from '../models/Route.model';
-import { CargoModel } from '../models/Cargo.model';
-import { CustomReportCreateInput } from '../models/Report.model';
-import { RouteService } from '../services/route.service';
-import { CargoService } from '../services/cargo.service';
-import { MomentService } from '../services/moment.service';
-import { DateFormatInterceptor } from '../interceptors/dateFormat.interceptor';
+import { ReportService } from './report.service';
+import { CompanyModel } from '../../models/Company.model';
+import { RouteModel } from '../../models/Route.model';
+import { CargoModel } from '../../models/Cargo.model';
+import { CustomReportCreateInput } from '../../models/Report.model';
+import { RouteService } from '../route/route.service';
+import { CargoService } from '../cargo/cargo.service';
+import { MomentService } from '../../services/moment.service';
+import { DateFormatInterceptor } from '../../interceptors/dateFormat.interceptor';
 import { groupBy as _groupBy, maxBy as _maxBy } from 'lodash';
-import { maxFrequencyInArray } from '../utils/utils';
+import { maxFrequencyInArray } from '../../utils/utils';
 
 @Controller()
 export class ReportController {
     constructor(
         private readonly reportService: ReportService,
         private readonly routeService: RouteService,
-        private readonly cargoService: CargoService,
-        private readonly momentService: MomentService
+        private readonly cargoService: CargoService
     ) {}
 
     @UseInterceptors(DateFormatInterceptor)

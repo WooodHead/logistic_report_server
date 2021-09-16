@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { Cargo as CargoModel, Prisma } from '@prisma/client';
-import { CargoService } from '../services/cargo.service';
+import { CargoService } from './cargo.service';
 
 @Controller()
 export class CargoController {

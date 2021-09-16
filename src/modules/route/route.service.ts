@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from './prisma.service';
-import { Cargo, Prisma, Route } from '@prisma/client';
+import { PrismaService } from '../../services/prisma.service';
+import { Route, Prisma } from '@prisma/client';
 
 @Injectable()
-export class CargoService {
+export class RouteService {
     constructor(private prisma: PrismaService) {}
     //
     // async auto(
@@ -14,15 +14,15 @@ export class CargoService {
     //     });
     // }
 
-    async cargos(params: {
+    async routes(params: {
         skip?: number;
         take?: number;
-        cursor?: Prisma.CargoWhereUniqueInput;
-        where?: Prisma.CargoWhereInput;
-        orderBy?: Prisma.CargoOrderByInput;
-    }): Promise<Cargo[]> {
+        cursor?: Prisma.RouteWhereUniqueInput;
+        where?: Prisma.RouteWhereInput;
+        orderBy?: Prisma.RouteOrderByInput;
+    }): Promise<Route[]> {
         const { skip, take, cursor, where, orderBy } = params;
-        return this.prisma.cargo.findMany({
+        return this.prisma.route.findMany({
             skip,
             take,
             cursor,
@@ -31,16 +31,16 @@ export class CargoService {
         });
     }
 
-    async findOrCreateCargo(data: Prisma.CargoUncheckedCreateInput): Promise<Cargo> {
-        return this.prisma.cargo.upsert({
+    async findOrCreateRoute(data: Prisma.RouteUncheckedCreateInput): Promise<Route> {
+        return this.prisma.route.upsert({
             where: { id: data.id || 0 },
             update: {},
             create: data,
         });
     }
 
-    // async createAuto(data: Prisma.AutoCreateInput): Promise<Auto.model.ts> {
-    //     return this.prisma.auto.create({
+    // async createRoute(data: Prisma.RouteCreateInput): Promise<Route> {
+    //     return this.prisma.route.create({
     //         data,
     //     });
     // }
