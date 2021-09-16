@@ -1,7 +1,7 @@
 import { Body, Controller, DefaultValuePipe, Get, ParseBoolPipe, Query } from '@nestjs/common';
 import { Company as CompanyModel, Prisma } from '@prisma/client';
-import { CompanyService } from '../services/company.service';
-import { CustomAutoCreateInput } from '../models/Auto.model';
+import { CompanyService } from './company.service';
+import { CustomAutoCreateInput } from '../../models/Auto.model';
 
 @Controller()
 export class CompanyController {

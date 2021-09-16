@@ -17,12 +17,11 @@ import { CargoModel } from '../../models/Cargo.model';
 import { CustomReportCreateInput } from '../../models/Report.model';
 import { RouteService } from '../route/route.service';
 import { CargoService } from '../cargo/cargo.service';
-import { MomentService } from '../../services/moment.service';
 import { DateFormatInterceptor } from '../../interceptors/dateFormat.interceptor';
 import { groupBy as _groupBy, maxBy as _maxBy } from 'lodash';
 import { maxFrequencyInArray } from '../../utils/utils';
 
-@Controller()
+@Controller('reports')
 export class ReportController {
     constructor(
         private readonly reportService: ReportService,
@@ -31,7 +30,7 @@ export class ReportController {
     ) {}
 
     @UseInterceptors(DateFormatInterceptor)
-    @Get('reports')
+    @Get()
     async index(@Query('from') from, @Query('to') to): Promise<ReportModel[]> {
         // ToDo make Pipe
         if (!Date.parse(from) || !Date.parse(to)) {
@@ -46,7 +45,7 @@ export class ReportController {
         });
     }
 
-    @Post('reports')
+    @Post()
     @HttpCode(HttpStatus.OK)
     async store(
         @Body(new ParseArrayPipe({ items: CustomReportCreateInput }))
@@ -76,7 +75,7 @@ export class ReportController {
     }
 
     @HttpCode(HttpStatus.OK)
-    @Post('reports/history')
+    @Post('history')
     async history(@Body() bodyData) {
         const { autoNums } = bodyData;
         const reportsWithAutos = await this.reportService.reports({
