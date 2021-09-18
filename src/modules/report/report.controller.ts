@@ -6,7 +6,7 @@ import {
     HttpStatus,
     ParseArrayPipe,
     Post,
-    Query,
+    Query, UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { Prisma, Report as ReportModel } from '@prisma/client';
@@ -20,7 +20,9 @@ import { CargoService } from '../cargo/cargo.service';
 import { DateFormatInterceptor } from '../../interceptors/dateFormat.interceptor';
 import { groupBy as _groupBy, maxBy as _maxBy } from 'lodash';
 import { maxFrequencyInArray } from '../../utils/utils';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('reports')
 export class ReportController {
     constructor(

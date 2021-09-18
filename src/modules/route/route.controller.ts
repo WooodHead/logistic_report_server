@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Route as RouteModel, Prisma } from '@prisma/client';
 import { RouteService } from './route.service';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller()
 export class RouteController {
     constructor(private readonly routeService: RouteService) {}

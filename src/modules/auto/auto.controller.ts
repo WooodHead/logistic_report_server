@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import { Auto as AutoModel, Prisma } from '@prisma/client';
 import { AutoService } from './auto.service';
 import { AutoBrandModel } from '../../models/AutoBrand.model';
 import { CompanyModel } from '../../models/Company.model';
 import { CustomAutoCreateInput, CustomAutoUpdateInput } from '../../models/Auto.model';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller()
 export class AutoController {
     constructor(private readonly autoService: AutoService) {}

@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { Cargo as CargoModel, Prisma } from '@prisma/client';
 import { CargoService } from './cargo.service';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller()
 export class CargoController {
     constructor(private readonly cargoService: CargoService) {}

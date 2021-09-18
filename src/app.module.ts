@@ -7,9 +7,18 @@ import { AutoModule } from './modules/auto/auto.module';
 import { ReportModule } from './modules/report/report.module';
 import { AutoBrandModule } from './modules/autoBrand/autoBrand.module';
 import { CompanyModule } from './modules/company/company.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-    imports: [HttpModule, AuthModule, AutoModule, ReportModule, AutoBrandModule, CompanyModule],
+    imports: [
+        HttpModule,
+        AuthModule,
+        AutoModule,
+        ReportModule,
+        AutoBrandModule,
+        CompanyModule,
+        ConfigModule.forRoot(),
+    ],
     controllers: [LardiTransController],
     providers: [LardiTransService],
 })
