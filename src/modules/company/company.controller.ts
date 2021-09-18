@@ -1,10 +1,4 @@
-import {
-    Controller,
-    DefaultValuePipe,
-    Get,
-    ParseBoolPipe,
-    Query,
-} from '@nestjs/common';
+import { Controller, DefaultValuePipe, Get, ParseBoolPipe, Query } from '@nestjs/common';
 import { Company as CompanyModel } from '@prisma/client';
 import { CompanyService } from './company.service';
 
