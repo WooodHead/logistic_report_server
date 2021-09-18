@@ -22,7 +22,7 @@ import { groupBy as _groupBy, maxBy as _maxBy } from 'lodash';
 import { maxFrequencyInArray } from '../../utils/utils';
 import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 @Controller('reports')
 export class ReportController {
     constructor(

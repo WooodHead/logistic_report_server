@@ -6,7 +6,7 @@ import { CompanyModel } from '../../models/Company.model';
 import { CustomAutoCreateInput, CustomAutoUpdateInput } from '../../models/Auto.model';
 import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 @Controller()
 export class AutoController {
     constructor(private readonly autoService: AutoService) {}

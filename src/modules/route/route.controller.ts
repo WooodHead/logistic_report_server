@@ -3,7 +3,7 @@ import { Route as RouteModel, Prisma } from '@prisma/client';
 import { RouteService } from './route.service';
 import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 @Controller()
 export class RouteController {
     constructor(private readonly routeService: RouteService) {}

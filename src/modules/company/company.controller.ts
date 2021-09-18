@@ -1,18 +1,14 @@
 import {
-    Body,
     Controller,
     DefaultValuePipe,
     Get,
     ParseBoolPipe,
     Query,
-    UseGuards,
 } from '@nestjs/common';
-import { Company as CompanyModel, Prisma } from '@prisma/client';
+import { Company as CompanyModel } from '@prisma/client';
 import { CompanyService } from './company.service';
-import { CustomAutoCreateInput } from '../../models/Auto.model';
-import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 @Controller()
 export class CompanyController {
     constructor(private readonly companyService: CompanyService) {}

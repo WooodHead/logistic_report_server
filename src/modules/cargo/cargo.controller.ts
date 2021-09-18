@@ -3,7 +3,7 @@ import { Cargo as CargoModel, Prisma } from '@prisma/client';
 import { CargoService } from './cargo.service';
 import { AuthGuard } from '@nestjs/passport';
 
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 @Controller()
 export class CargoController {
     constructor(private readonly cargoService: CargoService) {}

@@ -8,6 +8,8 @@ import { UniqueEmailProvider } from './services/uniqueEmail.provider';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './services/jwt.strategy';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth.guard';
 
 @Module({
     controllers: [AuthController],
@@ -18,8 +20,8 @@ import { JwtStrategy } from './services/jwt.strategy';
         JwtModule.registerAsync({
             imports: [ConfigModule],
             useFactory: (configService: ConfigService) => ({
-                secret: configService.get<string>('JWT_SECRET'),
-                signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN') },
+                secret: configService.get<string>('JWT_ACCESS_SECRET'),
+                signOptions: { expiresIn: configService.get<string>('JWT_ACCESS_EXPIRES_IN') },
             }),
             inject: [ConfigService],
         }),
@@ -28,6 +30,15 @@ import { JwtStrategy } from './services/jwt.strategy';
         //     signOptions: { expiresIn: '60s' },
         // }),
     ],
-    providers: [AuthService, LocalStrategy, UniqueEmailProvider, JwtStrategy],
+    providers: [
+        AuthService,
+        LocalStrategy,
+        UniqueEmailProvider,
+        JwtStrategy,
+        {
+            provide: APP_GUARD,
+            useClass: JwtAuthGuard,
+        },
+    ],
 })
 export class AuthModule {}
