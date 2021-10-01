@@ -12,8 +12,11 @@ export class AuthController {
 
     @Public()
     @Post('register')
-    register(@Body() user: UserDto): Promise<UserModel> {
-        return this.userService.createUser(user);
+    async register(
+        @Body() user: UserDto
+    ): Promise<{ user: Partial<UserModel>; accessToken: string }> {
+        const createdUser: UserModel = await this.userService.createUser(user);
+        return this.authService.login(createdUser);
     }
 
     @Public()

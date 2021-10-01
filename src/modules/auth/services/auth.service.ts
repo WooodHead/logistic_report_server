@@ -21,9 +21,11 @@ export class AuthService {
     }
 
     async login(user: User) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...restUser } = user;
         const payload = { id: user.id };
         return {
-            user,
+            user: restUser,
             accessToken: this.jwtService.sign(payload),
         };
     }
