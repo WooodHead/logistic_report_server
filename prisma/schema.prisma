@@ -79,7 +79,7 @@ model Report {
   autoNum      String?
   driver       String?
   rate         Int?
-  rate_units   RateUnits @default(fixed)
+  rateUnits   RateUnits @default(fixed)
   created_at   DateTime  @default(now())
 }
 

@@ -120,7 +120,7 @@ export class ReportController {
             allAutoNumRates[num] = [];
             reportsGroupedByAutos[num].forEach((report) => {
                 if (report.rate) {
-                    allAutoNumRates[num].push(`${report.rate}:${report.rate_units}`);
+                    allAutoNumRates[num].push(`${report.rate}:${report.rateUnits}`);
                 }
             });
         });
@@ -129,8 +129,8 @@ export class ReportController {
         autoNums.forEach((num) => {
             const autoNumRateKey = maxFrequencyInArray(allAutoNumRates[num]);
             if (autoNumRateKey) {
-                const [rate, rate_units] = autoNumRateKey.split(':');
-                maxAutoNumRates[num] = { rate, rate_units };
+                const [rate, rateUnits] = autoNumRateKey.split(':');
+                maxAutoNumRates[num] = { rate, rateUnits };
             }
         });
 
