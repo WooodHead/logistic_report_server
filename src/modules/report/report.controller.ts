@@ -119,13 +119,17 @@ export class ReportController {
         autoNums.forEach((num) => {
             allAutoNumRates[num] = [];
             reportsGroupedByAutos[num].forEach((report) => {
-                report.rate && allAutoNumRates[num].push(report.rate);
+                if (report.rate) {
+                    allAutoNumRates[num].push(`${report.rate}:${report.rate_units}`);
+                }
             });
         });
 
         const maxAutoNumRates = {};
         autoNums.forEach((num) => {
-            maxAutoNumRates[num] = maxFrequencyInArray(allAutoNumRates[num]);
+            const autoNumRateKey = maxFrequencyInArray(allAutoNumRates[num]);
+            const [rate, rate_units] = autoNumRateKey.split(':');
+            maxAutoNumRates[num] = { rate, rate_units };
         });
 
         return {

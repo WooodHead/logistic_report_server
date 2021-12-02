@@ -66,18 +66,25 @@ model Cargo {
 }
 
 model Report {
-  id           Int      @id @default(autoincrement())
-  date         DateTime @db.Date
-  route        Route    @relation(fields: [routeId], references: [id])
+  id           Int       @id @default(autoincrement())
+  date         DateTime  @db.Date
+  route        Route     @relation(fields: [routeId], references: [id])
   routeId      Int
-  cargo        Cargo    @relation(fields: [cargoId], references: [id])
+  cargo        Cargo     @relation(fields: [cargoId], references: [id])
   cargoId      Int
-  autoOwner    Company? @relation("autoOwner", fields: [autoOwnerId], references: [id])
+  autoOwner    Company?  @relation("autoOwner", fields: [autoOwnerId], references: [id])
   autoOwnerId  Int?
-  cargoOwner   Company? @relation("cargoOwner", fields: [cargoOwnerId], references: [id])
+  cargoOwner   Company?  @relation("cargoOwner", fields: [cargoOwnerId], references: [id])
   cargoOwnerId Int?
   autoNum      String?
   driver       String?
   rate         Int?
-  created_at   DateTime @default(now())
+  rate_units   RateUnits @default(fixed)
+  created_at   DateTime  @default(now())
+}
+
+enum RateUnits {
+  per_mile
+  per_weight
+  fixed
 }
