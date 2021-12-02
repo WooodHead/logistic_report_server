@@ -38,7 +38,6 @@ export class ChartsController {
             ORDER BY COUNT(t.id) DESC
             LIMIT 5;
         `);
-        console.log("-> thisYear", thisYear);
         const prevYear = await this.reportService.rawQuery(`
             SELECT routeId, COUNT(t.id) as amountPrevYear, R.name
             FROM logistic_report.Report as t
