@@ -128,8 +128,10 @@ export class ReportController {
         const maxAutoNumRates = {};
         autoNums.forEach((num) => {
             const autoNumRateKey = maxFrequencyInArray(allAutoNumRates[num]);
-            const [rate, rate_units] = autoNumRateKey.split(':');
-            maxAutoNumRates[num] = { rate, rate_units };
+            if (autoNumRateKey) {
+                const [rate, rate_units] = autoNumRateKey.split(':');
+                maxAutoNumRates[num] = { rate, rate_units };
+            }
         });
 
         return {
