@@ -1,6 +1,7 @@
 # compiled output
 /server/dist
 /node_modules
+dist
 
 *.env
 .env
