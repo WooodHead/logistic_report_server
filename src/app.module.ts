@@ -8,6 +8,7 @@ import { ReportModule } from './modules/report/report.module';
 import { AutoBrandModule } from './modules/autoBrand/autoBrand.module';
 import { CompanyModule } from './modules/company/company.module';
 import { ConfigModule } from '@nestjs/config';
+import { StripeModule } from './modules/stripe/stripe.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
         ReportModule,
         AutoBrandModule,
         CompanyModule,
+        StripeModule,
         ConfigModule.forRoot(),
     ],
     controllers: [LardiTransController],

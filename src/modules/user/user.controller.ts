@@ -15,6 +15,6 @@ export class UserController {
 
     @Post('users')
     store(@Body() userData: Prisma.UserCreateInput): Promise<UserModel> {
-        return this.userService.createUser(userData);
+        return this.userService.store(userData);
     }
 }

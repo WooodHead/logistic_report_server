@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  email      String   @unique
-  name       String?
-  password   String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  avatar     String?
-  company    String?
+  id           Int            @id @default(autoincrement())
+  email        String         @unique
+  name         String?
+  password     String
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  avatar       String?
+  company      String?
+  Subscription Subscription[] @relation("user")
 }
 
 model Company {
@@ -79,7 +80,7 @@ model Report {
   autoNum      String?
   driver       String?
   rate         Int?
-  rateUnits   RateUnits @default(fixed)
+  rateUnits    RateUnits @default(fixed)
   created_at   DateTime  @default(now())
 }
 
@@ -87,4 +88,21 @@ enum RateUnits {
   per_mile
   per_weight
   fixed
+}
+
+model Subscription {
+  id                Int               @id @default(autoincrement())
+  subscriptionId    String            @unique
+  userId            Int?
+  user              User?             @relation("user", fields: [userId], references: [id])
+  plan              SubscriptionPlans
+  subscriptionStart DateTime
+  subscriptionEnd   DateTime
+  trialStart        DateTime?
+  trialEnd          DateTime?
+}
+
+enum SubscriptionPlans {
+  month
+  year
 }

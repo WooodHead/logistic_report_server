@@ -7,10 +7,14 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-    constructor(private userService: UserService, private jwtService: JwtService) {}
+    constructor(
+        private userService: UserService,
+        private jwtService: JwtService,
+        private configService: ConfigService
+    ) {}
 
     async validateUser(email: string, pass: string): Promise<Partial<User> | null> {
-        const user: User = await this.userService.user({ email });
+        const user: User = await this.userService.findOne({ email });
 
         if (!user) {
             return null;
@@ -28,5 +32,13 @@ export class AuthService {
             user: restUser,
             accessToken: this.jwtService.sign(payload),
         };
+    }
+
+    buildJwtAccessToken(userId: number) {
+        const payload = { id: userId };
+        return this.jwtService.sign(payload, {
+            secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
+            expiresIn: this.configService.get('JWT_ACCESS_TOKEN_EXPIRES_IN'),
+        });
     }
 }

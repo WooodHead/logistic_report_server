@@ -6,7 +6,7 @@ import { User, Prisma } from '@prisma/client';
 export class UserService {
     constructor(private prisma: PrismaService) {}
 
-    async user(
+    async findOne(
         userWhereUniqueInput: Prisma.UserWhereUniqueInput,
         userSelect?: Prisma.UserSelect
     ): Promise<User | null> {
@@ -31,7 +31,7 @@ export class UserService {
         });
     }
 
-    async createUser(data: Prisma.UserCreateInput): Promise<User> {
+    async store(data: Prisma.UserCreateInput): Promise<User> {
         // ToDO remove pass
         return this.prisma.user.create({
             data,
@@ -56,7 +56,7 @@ export class UserService {
     }
 
     async isEmailAlreadyExists(email: string): Promise<boolean> {
-        const user = await this.user({ email });
+        const user = await this.findOne({ email });
         return !user;
     }
 }

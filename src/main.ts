@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ErrorFilter } from './filters/error.filter';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { validatorOptions } from './config/validation-options.pipe';
+import { validatorOptions } from './config/validation-options.config';
 import * as bodyParser from 'body-parser';
 import { useContainer } from 'class-validator';
 

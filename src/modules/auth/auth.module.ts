@@ -32,6 +32,7 @@ import { JwtAuthGuard } from './auth.guard';
         //     signOptions: { expiresIn: '60s' },
         // }),
     ],
+    exports: [AuthService],
     providers: [
         AuthService,
         LocalStrategy,

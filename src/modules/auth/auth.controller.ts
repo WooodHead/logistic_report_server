@@ -15,7 +15,7 @@ export class AuthController {
     async register(
         @Body() user: UserDto
     ): Promise<{ user: Partial<UserModel>; accessToken: string }> {
-        const createdUser: UserModel = await this.userService.createUser(user);
+        const createdUser: UserModel = await this.userService.store(user);
         return this.authService.login(createdUser);
     }
 
@@ -28,7 +28,7 @@ export class AuthController {
 
     @Post('refresh')
     async refresh(@Request() req): Promise<{ accessToken: string }> {
-        const user: UserModel = await this.userService.user({ id: req.user.id });
+        const user: UserModel = await this.userService.findOne({ id: req.user.id });
         return this.authService.login(user);
     }
 }
