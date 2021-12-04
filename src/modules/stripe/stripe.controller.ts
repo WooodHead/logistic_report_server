@@ -77,8 +77,8 @@ export class StripeController {
         const accessToken = this.authService.buildJwtAccessToken(userId);
         const frontUrl = this.configService.get('FRONTEND_URL');
         return isExists
-            ? res.redirect(`${frontUrl as string}login`)
-            : res.redirect(`${frontUrl as string}new-password?accessToken=${accessToken}`);
+            ? res.redirect(`${frontUrl as string}auth/login`)
+            : res.redirect(`${frontUrl as string}auth/new-password?accessToken=${accessToken}`);
     }
 
     // @Post('webhook')

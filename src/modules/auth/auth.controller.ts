@@ -1,10 +1,11 @@
-import { Body, Controller, Request, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Request, Post, Put, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { User as UserModel, Prisma } from '@prisma/client';
 import { AuthService } from './services/auth.service';
 import { UserService } from '../user/user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Public } from './auth.guard';
 import { UserDto } from '../../models/User.model';
+import { NewPasswordDto } from './models/new-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +25,22 @@ export class AuthController {
     @Post('login')
     login(@Request() req): Promise<{ accessToken: string }> {
         return this.authService.login(req.user);
+    }
+
+    @Public()
+    @Post('new-password')
+    @HttpCode(HttpStatus.OK)
+    async newPassword(
+        // @Req() req: { user: User },
+        // @Res({ passthrough: true }) res: Response,
+        @Body() newPasswordDto: NewPasswordDto
+    ) {
+        const user = await this.authService.getUserByToken(newPasswordDto.accessToken);
+        await this.userService.update({
+            where: { id: user.id },
+            data: { password: newPasswordDto.password },
+        });
+        return this.authService.login(user);
     }
 
     @Post('refresh')

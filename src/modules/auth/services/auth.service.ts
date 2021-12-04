@@ -41,4 +41,13 @@ export class AuthService {
             expiresIn: this.configService.get('JWT_ACCESS_TOKEN_EXPIRES_IN'),
         });
     }
+
+    async getUserByToken(jwtToken: string): Promise<User | null> {
+        try {
+            const decodeData: { id: number } = this.jwtService.decode(jwtToken) as { id: number };
+            return this.userService.findOne({ id: decodeData.id });
+        } catch (e) {
+            return null;
+        }
+    }
 }

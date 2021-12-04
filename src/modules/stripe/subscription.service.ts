@@ -10,17 +10,14 @@ export enum SubscriptionPlans {
 
 @Injectable()
 export class SubscriptionService {
-  constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService) {}
 
   // findOne(subscriptionData: FindConditions<Subscription>): Promise<Subscription | undefined> {
     // return this.manager.findOne(Subscription, subscriptionData);
   // }
 
     async store(data: Prisma.SubscriptionUncheckedCreateInput): Promise<SubscriptionEntity> {
-        // ToDO remove pass
-        return this.prisma.subscription.create({
-            data,
-        });
+        return this.prisma.subscription.create({ data });
     }
 
   // async store(userId: number, plan: SubscriptionPlans, subscription: Stripe.Subscription): Promise<Subscription> {
