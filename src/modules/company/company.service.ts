@@ -19,7 +19,7 @@ export class CompanyService {
         take?: number;
         cursor?: Prisma.CompanyWhereUniqueInput;
         where?: Prisma.CompanyWhereInput;
-        orderBy?: Prisma.CompanyOrderByInput;
+        orderBy?: Prisma.CompanyOrderByWithRelationInput;
         include?: Prisma.CompanyInclude;
     }): Promise<Company[]> {
         const { skip, take, cursor, where, orderBy, include } = params;

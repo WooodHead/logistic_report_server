@@ -10,7 +10,7 @@ export class AutoBrandService {
         take?: number;
         cursor?: Prisma.AutoBrandWhereUniqueInput;
         where?: Prisma.AutoBrandWhereInput;
-        orderBy?: Prisma.AutoBrandOrderByInput;
+        orderBy?: Prisma.AutoBrandOrderByWithRelationInput;
         include?: Prisma.AutoBrandInclude;
     }): Promise<AutoBrand[]> {
         const { skip, take, cursor, where, orderBy, include } = params;

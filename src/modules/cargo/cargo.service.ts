@@ -19,7 +19,7 @@ export class CargoService {
         take?: number;
         cursor?: Prisma.CargoWhereUniqueInput;
         where?: Prisma.CargoWhereInput;
-        orderBy?: Prisma.CargoOrderByInput;
+        orderBy?: Prisma.CargoOrderByWithRelationInput;
     }): Promise<Cargo[]> {
         const { skip, take, cursor, where, orderBy } = params;
         return this.prisma.cargo.findMany({

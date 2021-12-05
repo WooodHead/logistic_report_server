@@ -24,7 +24,7 @@ export class AutoService {
         take?: number;
         cursor?: Prisma.AutoWhereUniqueInput;
         where?: Prisma.AutoWhereInput;
-        orderBy?: Prisma.AutoOrderByInput;
+        orderBy?: Prisma.AutoOrderByWithRelationInput;
         include?: Prisma.AutoInclude;
     }): Promise<Auto[]> {
         const { skip, take, cursor, where, orderBy, include } = params;

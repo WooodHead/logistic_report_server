@@ -19,7 +19,7 @@ export class RouteService {
         take?: number;
         cursor?: Prisma.RouteWhereUniqueInput;
         where?: Prisma.RouteWhereInput;
-        orderBy?: Prisma.RouteOrderByInput;
+        orderBy?: Prisma.RouteOrderByWithRelationInput;
     }): Promise<Route[]> {
         const { skip, take, cursor, where, orderBy } = params;
         return this.prisma.route.findMany({
