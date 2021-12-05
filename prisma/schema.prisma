@@ -8,15 +8,20 @@ datasource db {
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
-  email        String         @unique
-  name         String?
-  password     String
-  created_at   DateTime       @default(now())
-  updated_at   DateTime       @updatedAt
-  avatar       String?
-  company      String?
-  Subscription Subscription[] @relation("user")
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  name          String?
+  password      String
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
+  avatar        String?
+  company       String?
+  subscriptions Subscription[]
+  autoBrands    AutoBrand[]
+  Auto          Auto[]
+  Route         Route[]
+  Cargo         Cargo[]
+  Report        Report[]
 }
 
 model Company {
@@ -33,9 +38,12 @@ model Company {
 }
 
 model AutoBrand {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  autos Auto[]
+  id        Int     @id @default(autoincrement())
+  userId    Int?
+  user      User?   @relation(fields: [userId], references: [id])
+  name      String  @unique
+  isDefault Boolean @default(false)
+  autos     Auto[]
 }
 
 model Auto {
@@ -45,6 +53,8 @@ model Auto {
   companyId   Int?
   autoBrand   AutoBrand? @relation(fields: [autoBrandId], references: [id])
   autoBrandId Int?
+  userId      Int?
+  user        User?      @relation(fields: [userId], references: [id])
   trailNum    String?
   driver      String?
   contact     String?
@@ -55,6 +65,8 @@ model Auto {
 model Route {
   id       Int      @id @default(autoincrement())
   name     String
+  userId   Int?
+  user     User?    @relation(fields: [userId], references: [id])
   distance Int?
   Report   Report[]
 }
@@ -63,6 +75,8 @@ model Cargo {
   id        Int      @id @default(autoincrement())
   name      String
   isDefault Boolean  @default(false)
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
   Report    Report[]
 }
 
@@ -77,6 +91,8 @@ model Report {
   autoOwnerId  Int?
   cargoOwner   Company?  @relation("cargoOwner", fields: [cargoOwnerId], references: [id])
   cargoOwnerId Int?
+  userId       Int?
+  user         User?     @relation(fields: [userId], references: [id])
   autoNum      String?
   driver       String?
   rate         Int?
@@ -94,7 +110,7 @@ model Subscription {
   id                Int               @id @default(autoincrement())
   subscriptionId    String            @unique
   userId            Int?
-  user              User?             @relation("user", fields: [userId], references: [id])
+  user              User?             @relation(fields: [userId], references: [id])
   plan              SubscriptionPlans
   subscriptionStart DateTime
   subscriptionEnd   DateTime

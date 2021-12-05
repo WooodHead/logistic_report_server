@@ -6,6 +6,7 @@ export const autoBrandSeeder = () => {
     ALL_AUTO_BRANDS.forEach((brand) => {
         autoBrands.push({
             name: brand,
+            isDefault: true,
         });
     });
     return prisma.autoBrand.createMany({
