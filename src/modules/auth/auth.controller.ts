@@ -1,11 +1,11 @@
-import { Body, Controller, Request, Post, Put, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Request, Post, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { User as UserModel, Prisma } from '@prisma/client';
 import { AuthService } from './services/auth.service';
 import { UserService } from '../user/user.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Public } from './auth.guard';
-import { UserDto } from '../../models/User.model';
 import { NewPasswordDto } from './models/new-password.dto';
+import { UserDto } from '../user/models/user.dto';
 
 @Controller('auth')
 export class AuthController {

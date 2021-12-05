@@ -16,7 +16,10 @@ export const reportSeeder = async (nReports, nCompanies) => {
         reports.push(
             prisma.report.create({
                 data: {
-                    date: new Date(startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime())),
+                    date: new Date(
+                        startDate.getTime() +
+                            Math.random() * (endDate.getTime() - startDate.getTime())
+                    ),
                     routeId: randomFromOneTo(ALL_ROUTES.length),
                     cargoId: randomFromOneTo(ALL_CARGOS.length),
                     autoNum: faker.vehicle.vrm(),
@@ -24,6 +27,7 @@ export const reportSeeder = async (nReports, nCompanies) => {
                     autoOwnerId: randomFromOneTo(nCompanies),
                     cargoOwnerId: randomFromOneTo(nCompanies),
                     rate: rate - (rate % 10),
+                    userId: 1,
                 },
             })
         );

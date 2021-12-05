@@ -1,14 +1,9 @@
 import { Prisma } from '@prisma/client';
-import { IsNotEmpty, ValidateIf } from 'class-validator';
-
-export class CustomCompanyCreateInput implements Prisma.CompanyUncheckedCreateInput {
-    name?: string;
-    email?: string;
-    code?: string;
-}
 
 export class CompanyModel {
-    static update(company: Prisma.CompanyUncheckedCreateInput): Prisma.CompanyUpdateOneWithoutAutosInput {
+    static update(
+        company: Prisma.CompanyUncheckedCreateInput
+    ): Prisma.CompanyUpdateOneWithoutAutosInput {
         if (!company) {
             return;
         }
@@ -18,7 +13,7 @@ export class CompanyModel {
         };
     }
 
-    static connectCompany(company: Prisma.CompanyUncheckedCreateInput) {
+    static connect(company: Prisma.CompanyUncheckedCreateInput) {
         if (!company) {
             return {};
         }
@@ -63,44 +58,4 @@ export class CompanyModel {
     //         },
     //     };
     // }
-}
-
-export class LardiCompany implements LardiCompanyInterface {
-    code: string;
-    name: string;
-    refId: number;
-    rating: {
-        positiveCommentCount: number;
-        negativeCommentCount: number;
-    };
-
-    constructor(code, name, rating, refId) {
-        this.code = code;
-        this.name = name;
-        this.rating = {
-            positiveCommentCount: rating.positiveCommentCount,
-            negativeCommentCount: rating.negativeCommentCount,
-        };
-        this.refId = refId;
-    }
-}
-
-export interface RawLardiCompanyInterface {
-    name: string;
-    firmCode: string;
-    refId: number;
-    rating: {
-        positiveCommentCount: number;
-        negativeCommentCount: number;
-    };
-}
-
-export interface LardiCompanyInterface {
-    name: string;
-    code: string;
-    refId: number;
-    rating: {
-        positiveCommentCount: number;
-        negativeCommentCount: number;
-    };
 }

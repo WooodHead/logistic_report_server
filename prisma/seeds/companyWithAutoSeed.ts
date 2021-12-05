@@ -16,6 +16,7 @@ export const companyWithAutoSeed = async (nCompanies, nAutos) => {
             email: faker.internet.email(),
             code: faker.datatype.number({ min: 10000, max: 99999 }).toString(),
             isCargoOwner: Math.random() > 0.75,
+            userId: 1,
         };
 
         const companyAutos = [];
@@ -26,9 +27,11 @@ export const companyWithAutoSeed = async (nCompanies, nAutos) => {
                 trailNum: faker.vehicle.vrm(),
                 driver: faker.name.findName(),
                 contact: faker.phone.phoneNumber('(0##)###-##-##'),
-                license: faker.random.alpha(3).toUpperCase() + faker.datatype.number(100000, 999999),
+                license:
+                    faker.random.alpha(3).toUpperCase() + faker.datatype.number(100000, 999999),
                 notes: faker.company.catchPhrase(),
                 autoBrandId: randomFromOneTo(ALL_AUTO_BRANDS.length),
+                userId: 1,
             });
         }
 

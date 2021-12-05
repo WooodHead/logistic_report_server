@@ -13,7 +13,7 @@ import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { HttpService } from '@nestjs/axios';
 import { UserService } from '../user/user.service';
 import { SubscriptionPlans, SubscriptionService } from './subscription.service';
-import { UserDto } from '../../models/User.model';
+import { UserDto } from '../user/models/user.dto';
 
 export enum StripeEvents {
     SUBSCRIPTION_UPDATED = 'customer.subscription.updated',

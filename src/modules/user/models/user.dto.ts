@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, Validate, ValidateNested } from 'class-validator';
 import { Prisma } from '@prisma/client';
-import { UniqueEmail } from '../modules/auth/services/uniqueEmail.provider';
+import { UniqueEmail } from '../../auth/services/uniqueEmail.provider';
 
 export class UserDto implements Prisma.UserUncheckedCreateInput {
     @IsNotEmpty()

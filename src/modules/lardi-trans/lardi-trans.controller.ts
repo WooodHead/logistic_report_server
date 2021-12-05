@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 // import { Auto as AutoModel, Prisma } from '@prisma/client';
-import { LardiTransService } from '../services/lardiTrans.service';
-import { LardiCompany, RawLardiCompanyInterface } from '../models/Company.model';
+import { LardiCompany, RawLardiCompanyInterface } from './models/lardi-company.model';
+import { LardiTransService } from './lardi-trans.service';
 // import { AutoBrandModel } from '../models/AutoBrand.model';
 // import { CompanyModel } from '../models/Company.model';
 // import { CustomAutoCreateInput } from '../validation/CustomAutoCreateInput';
@@ -12,8 +12,8 @@ export class LardiTransController {
 
     @Get('lardi-trans/search')
     async search(@Query('code') code: string): Promise<LardiCompany> {
-        const rawLardiCompanies: RawLardiCompanyInterface[] = await this.lardiTransService.search(code);
-        const lardiCompany = rawLardiCompanies.find((company) => company.firmCode === code);
+        const rawCompanies: RawLardiCompanyInterface[] = await this.lardiTransService.search(code);
+        const lardiCompany = rawCompanies.find((company) => company.firmCode === code);
         if (!lardiCompany) {
             return {} as LardiCompany;
         }

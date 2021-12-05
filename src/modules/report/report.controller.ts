@@ -6,21 +6,24 @@ import {
     HttpStatus,
     ParseArrayPipe,
     Post,
-    Query, UseGuards,
+    Query,
+    Req,
     UseInterceptors,
 } from '@nestjs/common';
 import { Prisma, Report as ReportModel } from '@prisma/client';
 import { ReportService } from './report.service';
-import { CompanyModel } from '../../models/Company.model';
+import { CompanyModel } from '../company/models/company.model';
 import { RouteModel } from '../../models/Route.model';
 import { CargoModel } from '../../models/Cargo.model';
-import { CustomReportCreateInput } from '../../models/Report.model';
+import { ReportDto } from './models/report.dto';
 import { RouteService } from '../route/route.service';
 import { CargoService } from '../cargo/cargo.service';
 import { DateFormatInterceptor } from '../../interceptors/dateFormat.interceptor';
 import { groupBy as _groupBy, maxBy as _maxBy } from 'lodash';
 import { maxFrequencyInArray } from '../../utils/utils';
+import { User } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
+import { UserModel } from '../user/models/user.model';
 
 // @UseGuards(AuthGuard('jwt'))
 @Controller('reports')
@@ -50,8 +53,9 @@ export class ReportController {
     @Post()
     @HttpCode(HttpStatus.OK)
     async store(
-        @Body(new ParseArrayPipe({ items: CustomReportCreateInput }))
-        reportData: CustomReportCreateInput[]
+        @Body(new ParseArrayPipe({ items: ReportDto }))
+        reportData: ReportDto[],
+        @Req() req: { user: User | undefined }
     ) {
         const butchData: Prisma.ReportCreateInput[] = [];
         const { route, cargo } = reportData[0]; // TODo? [0]
@@ -59,7 +63,7 @@ export class ReportController {
         const routeFromDb = await this.routeService.findOrCreateRoute(route);
         const cargoFromDb = await this.cargoService.findOrCreateCargo(cargo);
 
-        reportData.forEach((report: CustomReportCreateInput) => {
+        reportData.forEach((report: ReportDto) => {
             const { autoOwner, cargoOwner, date, ...restData } = report;
 
             butchData.push({
@@ -67,8 +71,9 @@ export class ReportController {
                 date: new Date(date),
                 route: RouteModel.createOrConnect(routeFromDb),
                 cargo: CargoModel.createOrConnect(cargoFromDb),
-                autoOwner: CompanyModel.connectCompany(autoOwner),
                 cargoOwner: CompanyModel.createOrConnect(cargoOwner),
+                autoOwner: CompanyModel.connect(autoOwner),
+                user: UserModel.connect(req.user),
             });
         });
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RawLardiCompanyInterface } from '../models/Company.model';
+import { RawLardiCompanyInterface } from './models/lardi-company.model';
 import { HttpService } from '@nestjs/axios';
 import { Observable } from 'rxjs';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';

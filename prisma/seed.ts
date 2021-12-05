@@ -10,8 +10,8 @@ import { reportSeeder } from './seeds/reportSeed';
 const TOTAL_COMPANIES = 12;
 
 async function main() {
+    await userSeeder(1);
     await autoBrandSeeder();
-    await userSeeder(2);
     await companyWithAutoSeed(TOTAL_COMPANIES, 150);
     await cargoSeeder();
     await routeSeeder();

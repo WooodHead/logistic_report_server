@@ -8,6 +8,7 @@ export const routeSeeder = () => {
         routes.push({
             name: route,
             distance: faker.datatype.number(40, 350),
+            userId: 1,
         });
     });
     return prisma.route.createMany({
