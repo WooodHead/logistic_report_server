@@ -14,8 +14,9 @@ export class AutoController {
     constructor(private readonly autoService: AutoService) {}
 
     @Get('autos')
-    index(): Promise<AutoModel[]> {
-        return this.autoService.autos({
+    index(@Req() req: { user: User }): Promise<AutoModel[]> {
+        return this.autoService.findAll({
+            where: { userId: req.user.id },
             include: {
                 company: true,
                 autoBrand: true,
@@ -24,10 +25,7 @@ export class AutoController {
     }
 
     @Put('autos')
-    async update(
-        @Body() autoData: AutoUpdateDto,
-        @Req() req: { user: User | undefined }
-    ): Promise<AutoModel> {
+    async update(@Body() autoData: AutoUpdateDto, @Req() req: { user: User }): Promise<AutoModel> {
         const { autoBrand, company, id, companyId, autoBrandId, ...restData } = autoData;
 
         const autoUpdateInput: Prisma.AutoUpdateInput = {
@@ -49,10 +47,7 @@ export class AutoController {
     }
 
     @Post('autos')
-    async store(
-        @Body() autoData: AutoCreateDto,
-        @Req() req: { user: User | undefined }
-    ): Promise<AutoModel> {
+    async store(@Body() autoData: AutoCreateDto, @Req() req: { user: User }): Promise<AutoModel> {
         const { autoBrand, company, ...restData } = autoData;
 
         const autoCreateInput: Prisma.AutoCreateInput = {

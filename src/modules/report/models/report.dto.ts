@@ -1,6 +1,8 @@
 import { IsNotEmpty } from 'class-validator';
-import { Prisma } from '@prisma/client';
 import { Transform } from 'class-transformer';
+import { CompanyUncheckedCreateInput } from '../../company/models/company-create.dto';
+import { RouteUncheckedCreateInput } from '../../route/models/route.dto';
+import { CargoUncheckedCreateInput } from '../../cargo/models/cargo.dto';
 
 export class ReportDto {
     @IsNotEmpty()
@@ -12,9 +14,9 @@ export class ReportDto {
     })
     rate?: number | null;
     @IsNotEmpty()
-    route: Prisma.RouteUncheckedCreateInput;
+    route: RouteUncheckedCreateInput;
     @IsNotEmpty()
-    cargo: Prisma.CargoUncheckedCreateInput;
-    autoOwner?: Prisma.CompanyUncheckedCreateInput | null;
-    cargoOwner?: Prisma.CompanyUncheckedCreateInput | null;
+    cargo: CargoUncheckedCreateInput;
+    autoOwner?: CompanyUncheckedCreateInput | null;
+    cargoOwner?: CompanyUncheckedCreateInput | null;
 }

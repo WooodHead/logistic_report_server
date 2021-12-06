@@ -15,4 +15,16 @@ export class RouteModel {
             },
         };
     }
+
+    static connect(
+        route: Prisma.RouteUncheckedCreateInput
+    ): Prisma.RouteCreateNestedOneWithoutReportInput {
+        if (!route) {
+            return {};
+        }
+
+        return {
+            connect: { id: route.id },
+        };
+    }
 }

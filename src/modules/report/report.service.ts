@@ -19,7 +19,7 @@ export class ReportService {
         });
     }
 
-    async reports(params: {
+    async findAll(params: {
         skip?: number;
         take?: number;
         cursor?: Prisma.ReportWhereUniqueInput;

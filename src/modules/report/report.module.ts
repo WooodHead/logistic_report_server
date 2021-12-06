@@ -7,11 +7,12 @@ import { MomentService } from '../../services/moment.service';
 import { CargoModule } from '../cargo/cargo.module';
 import { RouteModule } from '../route/route.module';
 import { ChartsController } from './charts.controller';
+import { CompanyService } from '../company/company.service';
 
 @Module({
     imports: [CargoModule, RouteModule],
     controllers: [ReportController, ChartsController],
-    providers: [ReportService, PrismaService, DateFormatInterceptor, MomentService],
+    providers: [ReportService, PrismaService, DateFormatInterceptor, MomentService, CompanyService],
     exports: [],
 })
 export class ReportModule {}

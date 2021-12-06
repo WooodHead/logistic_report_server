@@ -24,6 +24,7 @@ import { maxFrequencyInArray } from '../../utils/utils';
 import { User } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { UserModel } from '../user/models/user.model';
+import { CompanyService } from '../company/company.service';
 
 // @UseGuards(AuthGuard('jwt'))
 @Controller('reports')
@@ -31,20 +32,26 @@ export class ReportController {
     constructor(
         private readonly reportService: ReportService,
         private readonly routeService: RouteService,
-        private readonly cargoService: CargoService
+        private readonly cargoService: CargoService,
+        private readonly companyService: CompanyService,
     ) {}
 
     @UseInterceptors(DateFormatInterceptor)
     @Get()
-    async index(@Query('from') from, @Query('to') to): Promise<ReportModel[]> {
+    async index(
+        @Query('from') from,
+        @Query('to') to,
+        @Req() req: { user: User }
+    ): Promise<ReportModel[]> {
         // ToDo make Pipe
         if (!Date.parse(from) || !Date.parse(to)) {
             return [];
         }
-        return await this.reportService.reports({
+        return await this.reportService.findAll({
             include: { autoOwner: true, cargoOwner: true, route: true, cargo: true },
             where: {
                 date: { gte: new Date(from), lte: new Date(to) },
+                userId: req.user.id,
             },
             orderBy: [{ date: Prisma.SortOrder.desc }, { created_at: Prisma.SortOrder.asc }],
         });
@@ -55,24 +62,37 @@ export class ReportController {
     async store(
         @Body(new ParseArrayPipe({ items: ReportDto }))
         reportData: ReportDto[],
-        @Req() req: { user: User | undefined }
+        @Req() req: { user: User }
     ) {
         const butchData: Prisma.ReportCreateInput[] = [];
-        const { route, cargo } = reportData[0]; // TODo? [0]
+        const { route, cargo, cargoOwner } = reportData[0];
 
-        const routeFromDb = await this.routeService.findOrCreateRoute(route);
-        const cargoFromDb = await this.cargoService.findOrCreateCargo(cargo);
+        const routeFromDb = await this.routeService.findOrCreateRoute({
+            ...route,
+            userId: req.user.id,
+        });
+        const cargoFromDb = await this.cargoService.findOrCreateCargo({
+            ...cargo,
+            userId: req.user.id,
+        });
+        const cargoOwnerFromDb = await this.companyService.findOrCreateCompany({
+            ...cargoOwner,
+            userId: req.user.id,
+        });
 
         reportData.forEach((report: ReportDto) => {
-            const { autoOwner, cargoOwner, date, ...restData } = report;
+            const { autoOwner, date, ...restData } = report;
 
             butchData.push({
                 ...restData,
                 date: new Date(date),
-                route: RouteModel.createOrConnect(routeFromDb),
-                cargo: CargoModel.createOrConnect(cargoFromDb),
-                cargoOwner: CompanyModel.createOrConnect(cargoOwner),
-                autoOwner: CompanyModel.connect(autoOwner),
+                route: RouteModel.connect(routeFromDb),
+                cargo: CargoModel.connect(cargoFromDb),
+                cargoOwner: CompanyModel.connect(cargoOwnerFromDb),
+                autoOwner: CompanyModel.connect({
+                    ...autoOwner,
+                    userId: req.user.id,
+                }),
                 user: UserModel.connect(req.user),
             });
         });
@@ -83,11 +103,14 @@ export class ReportController {
 
     @HttpCode(HttpStatus.OK)
     @Post('history')
-    async history(@Body() bodyData) {
+    async history(@Body() bodyData, @Req() req: { user: User }) {
         const { autoNums } = bodyData;
-        const reportsWithAutos = await this.reportService.reports({
+        const reportsWithAutos = await this.reportService.findAll({
             include: { autoOwner: true, cargoOwner: true, route: true, cargo: true },
-            where: { autoNum: { in: autoNums } },
+            where: {
+                autoNum: { in: autoNums },
+                userId: req.user.id,
+            },
             orderBy: [{ date: Prisma.SortOrder.desc }, { created_at: Prisma.SortOrder.asc }],
         });
 
@@ -115,6 +138,7 @@ export class ReportController {
                 report.cargoOwnerId && allCargoOwnerIds.push(report.cargoOwnerId);
             });
         });
+        console.log(allCargoOwnerIds);
         const maxCargoId = maxFrequencyInArray(allCargoIds),
             maxRouteId = maxFrequencyInArray(allRouteIds),
             maxCargoOwnerId = maxFrequencyInArray(allCargoOwnerIds);

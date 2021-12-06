@@ -1,7 +1,10 @@
 import { Prisma } from '@prisma/client';
-type CompanyUncheckedCreateInput = Omit<Prisma.CompanyUncheckedCreateInput, 'userId'>;
+import { IsNotEmpty } from 'class-validator';
+
+export type CompanyUncheckedCreateInput = Omit<Prisma.CompanyUncheckedCreateInput, 'userId'>;
 
 export class CompanyCreateDto implements CompanyUncheckedCreateInput {
+    @IsNotEmpty()
     name?: string;
     email?: string;
     code?: string;

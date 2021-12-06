@@ -6,6 +6,6 @@ import { CompanyService } from './company.service';
 @Module({
     controllers: [CompanyController],
     providers: [CompanyService, PrismaService],
-    exports: [],
+    exports: [CompanyService],
 })
 export class CompanyModule {}

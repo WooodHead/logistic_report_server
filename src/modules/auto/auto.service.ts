@@ -19,7 +19,7 @@ export class AutoService {
         });
     }
 
-    async autos(params: {
+    async findAll(params: {
         skip?: number;
         take?: number;
         cursor?: Prisma.AutoWhereUniqueInput;

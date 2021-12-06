@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../services/prisma.service';
-import { Company, Prisma } from '@prisma/client';
+import { Cargo, Company, Prisma } from '@prisma/client';
 
 @Injectable()
 export class CompanyService {
@@ -30,6 +30,14 @@ export class CompanyService {
             where,
             orderBy,
             include,
+        });
+    }
+
+    async findOrCreateCompany(data: Prisma.CompanyUncheckedCreateInput): Promise<Company> {
+        return this.prisma.company.upsert({
+            where: { id: data.id || 0 },
+            update: {},
+            create: data,
         });
     }
 
