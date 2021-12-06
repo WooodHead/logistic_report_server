@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { Route as RouteModel, Prisma } from '@prisma/client';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Route as RouteModel, Prisma, User } from '@prisma/client';
 import { RouteService } from './route.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -9,8 +9,10 @@ export class RouteController {
     constructor(private readonly routeService: RouteService) {}
 
     @Get('routes')
-    index(): Promise<RouteModel[]> {
-        return this.routeService.routes({});
+    index(@Req() req: { user: User }): Promise<RouteModel[]> {
+        return this.routeService.routes({
+            where: { userId: req.user.id },
+        });
     }
 
     // @Post('users')

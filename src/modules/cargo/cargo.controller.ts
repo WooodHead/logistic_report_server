@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { Cargo as CargoModel, Prisma } from '@prisma/client';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Cargo as CargoModel, Prisma, User } from '@prisma/client';
 import { CargoService } from './cargo.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -9,8 +9,12 @@ export class CargoController {
     constructor(private readonly cargoService: CargoService) {}
 
     @Get('cargos')
-    index(): Promise<CargoModel[]> {
-        return this.cargoService.cargos({});
+    index(@Req() req: { user: User }): Promise<CargoModel[]> {
+        return this.cargoService.cargos({
+            where: {
+                OR: [{ userId: req.user.id }, { isDefault: true }],
+            },
+        });
     }
 
     // @Post('users')
