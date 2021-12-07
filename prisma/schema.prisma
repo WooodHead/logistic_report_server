@@ -121,6 +121,12 @@ model Subscription {
   trialEnd          DateTime?
 }
 
+model ContactUs {
+  id    Int    @id @default(autoincrement())
+  email String
+  message   String
+}
+
 enum SubscriptionPlans {
   month
   year

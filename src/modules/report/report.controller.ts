@@ -13,8 +13,8 @@ import {
 import { Prisma, Report as ReportModel } from '@prisma/client';
 import { ReportService } from './report.service';
 import { CompanyModel } from '../company/models/company.model';
-import { RouteModel } from '../../models/Route.model';
-import { CargoModel } from '../../models/Cargo.model';
+import { RouteModel } from '../route/models/route.model';
+import { CargoModel } from '../cargo/models/cargo.model';
 import { ReportDto } from './models/report.dto';
 import { RouteService } from '../route/route.service';
 import { CargoService } from '../cargo/cargo.service';

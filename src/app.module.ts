@@ -8,6 +8,9 @@ import { CompanyModule } from './modules/company/company.module';
 import { ConfigModule } from '@nestjs/config';
 import { StripeModule } from './modules/stripe/stripe.module';
 import { LardiTransModule } from './modules/lardi-trans/lardi-trans.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { PrismaService } from './services/prisma.service';
 
 @Module({
     imports: [
@@ -21,7 +24,7 @@ import { LardiTransModule } from './modules/lardi-trans/lardi-trans.module';
         LardiTransModule,
         ConfigModule.forRoot(),
     ],
-    controllers: [],
-    providers: [],
+    controllers: [AppController],
+    providers: [AppService, PrismaService],
 })
 export class AppModule {}

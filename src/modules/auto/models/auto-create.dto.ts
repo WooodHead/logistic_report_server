@@ -1,7 +1,7 @@
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { CustomAutoBrandCreateInput } from '../../../models/AutoBrand.model';
+import { CustomAutoBrandCreateInput } from '../../autoBrand/models/autoBrand.model';
 import { CompanyCreateDto } from '../../company/models/company-create.dto';
 
 type AutoUncheckedCreateInput = Omit<Prisma.AutoUncheckedCreateInput, 'userId'>;

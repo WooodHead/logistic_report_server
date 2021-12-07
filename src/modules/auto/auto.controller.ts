@@ -1,11 +1,10 @@
-import { Body, Controller, Get, Post, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Req } from '@nestjs/common';
 import { Auto as AutoModel, Prisma, User } from '@prisma/client';
 import { AutoService } from './auto.service';
-import { AutoBrandModel } from '../../models/AutoBrand.model';
+import { AutoBrandModel } from '../autoBrand/models/autoBrand.model';
 import { CompanyModel } from '../company/models/company.model';
 import { AutoCreateDto } from './models/auto-create.dto';
 import { AutoUpdateDto } from './models/auto-update.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { UserModel } from '../user/models/user.model';
 
 // @UseGuards(AuthGuard('jwt'))
@@ -47,7 +46,10 @@ export class AutoController {
     }
 
     @Post('autos')
-    async store(@Body() autoData: AutoCreateDto, @Req() req: { user: UserModel }): Promise<AutoModel> {
+    async store(
+        @Body() autoData: AutoCreateDto,
+        @Req() req: { user: UserModel }
+    ): Promise<AutoModel> {
         // Check subscription
 
         const { autoBrand, company, ...restData } = autoData;
