@@ -1,6 +1,7 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { User } from '@prisma/client';
+import { UserModel } from '../user/models/user.model';
 
 // @UseGuards(AuthGuard('jwt'))
 @Controller('charts')
@@ -30,7 +31,7 @@ export class ChartsController {
     }
 
     @Get('top-routes')
-    async topRoutes(@Req() req: { user: User }): Promise<any> {
+    async topRoutes(@Req() req: { user: UserModel }): Promise<any> {
         const thisYear = await this.reportService.rawQuery(`
             SELECT t.routeId, COUNT(t.id) as amountThisYear, R.name
             FROM logistic_report.Report as t

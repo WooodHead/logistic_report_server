@@ -6,6 +6,7 @@ export class AutoUpdateDto extends AutoCreateDto {
     id: number;
     companyId: number;
     autoBrandId: number;
+    userId: number;
 
     constructor() {
         super();

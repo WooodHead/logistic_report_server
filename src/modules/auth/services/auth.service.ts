@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../services/prisma.service';
-import { User, Prisma } from '@prisma/client';
 import { UserService } from '../../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { UserModel } from '../../user/models/user.model';
+import { LoginResponseDto } from '../models/login-response.dto';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class AuthService {
@@ -13,23 +14,28 @@ export class AuthService {
         private configService: ConfigService
     ) {}
 
-    async validateUser(email: string, pass: string): Promise<Partial<User> | null> {
-        const user: User = await this.userService.findOne({ email });
+    async validateUser(email: string, pass: string): Promise<UserModel | null> {
+        const user: UserModel = await this.userService.findOne({ email });
 
         if (!user) {
             return null;
         }
 
-        const { password, ...restUser } = user;
-        return password === pass ? restUser : null;
+        return user.password === pass ? user : null;
     }
 
-    async login(user: User) {
+    login(user: UserModel): LoginResponseDto {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, ...restUser } = user;
+        // const { password, ...restUser } = user;
         const payload = { id: user.id };
+        // const a = plainToClass(LoginResponseDto, {
+        //     user,
+        //     accessToken: this.jwtService.sign(payload),
+        // });
+
+        // console.log("-> a", a);
         return {
-            user: restUser,
+            user,
             accessToken: this.jwtService.sign(payload),
         };
     }
@@ -42,7 +48,7 @@ export class AuthService {
         });
     }
 
-    async getUserByToken(jwtToken: string): Promise<User | null> {
+    async getUserByToken(jwtToken: string): Promise<UserModel | null> {
         try {
             const decodeData: { id: number } = this.jwtService.decode(jwtToken) as { id: number };
             return this.userService.findOne({ id: decodeData.id });

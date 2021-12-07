@@ -7,7 +7,9 @@ export class CustomAutoBrandCreateInput implements Prisma.AutoBrandUncheckedCrea
 }
 
 export class AutoBrandModel {
-    static update(autoBrand: Prisma.AutoBrandUncheckedCreateInput): Prisma.AutoBrandUpdateOneWithoutAutosInput {
+    static update(
+        autoBrand: Prisma.AutoBrandUncheckedCreateInput
+    ): Prisma.AutoBrandUpdateOneWithoutAutosInput {
         if (!autoBrand) {
             return;
         }

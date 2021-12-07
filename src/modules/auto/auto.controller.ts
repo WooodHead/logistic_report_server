@@ -26,7 +26,7 @@ export class AutoController {
 
     @Put('autos')
     async update(@Body() autoData: AutoUpdateDto, @Req() req: { user: User }): Promise<AutoModel> {
-        const { autoBrand, company, id, companyId, autoBrandId, ...restData } = autoData;
+        const { autoBrand, company, id, companyId, autoBrandId, userId, ...restData } = autoData;
 
         const autoUpdateInput: Prisma.AutoUpdateInput = {
             ...restData,
@@ -47,12 +47,14 @@ export class AutoController {
     }
 
     @Post('autos')
-    async store(@Body() autoData: AutoCreateDto, @Req() req: { user: User }): Promise<AutoModel> {
+    async store(@Body() autoData: AutoCreateDto, @Req() req: { user: UserModel }): Promise<AutoModel> {
+        // Check subscription
+
         const { autoBrand, company, ...restData } = autoData;
 
         const autoCreateInput: Prisma.AutoCreateInput = {
             ...restData,
-            autoBrand: AutoBrandModel.createOrConnect(autoBrand),
+            autoBrand: AutoBrandModel.createOrConnect({ ...autoBrand, userId: req.user.id }),
             company: CompanyModel.createOrConnect({ ...company, userId: req.user.id }),
             user: UserModel.connect(req.user),
         };

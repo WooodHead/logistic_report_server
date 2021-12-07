@@ -33,7 +33,7 @@ export class ReportController {
         private readonly reportService: ReportService,
         private readonly routeService: RouteService,
         private readonly cargoService: CargoService,
-        private readonly companyService: CompanyService,
+        private readonly companyService: CompanyService
     ) {}
 
     @UseInterceptors(DateFormatInterceptor)
@@ -62,7 +62,7 @@ export class ReportController {
     async store(
         @Body(new ParseArrayPipe({ items: ReportDto }))
         reportData: ReportDto[],
-        @Req() req: { user: User }
+        @Req() req: { user: UserModel }
     ) {
         const butchData: Prisma.ReportCreateInput[] = [];
         const { route, cargo, cargoOwner } = reportData[0];

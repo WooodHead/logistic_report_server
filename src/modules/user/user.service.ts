@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../services/prisma.service';
-import { User, Prisma } from '@prisma/client';
+import { User as UserEntity, Prisma } from '@prisma/client';
+import { plainToClass } from 'class-transformer';
+import { UserModel } from './models/user.model';
 
 @Injectable()
 export class UserService {
@@ -8,10 +10,19 @@ export class UserService {
 
     async findOne(
         userWhereUniqueInput: Prisma.UserWhereUniqueInput,
+        userInclude?: Prisma.UserInclude,
         userSelect?: Prisma.UserSelect
-    ): Promise<User | null> {
-        const args: Prisma.UserFindUniqueArgs = { where: userWhereUniqueInput, select: userSelect };
-        return this.prisma.user.findUnique(args);
+    ): Promise<UserModel | null> {
+        const args: Prisma.UserFindUniqueArgs = {
+            where: userWhereUniqueInput,
+            include: {
+                ...userInclude,
+                subscriptions: true,
+            },
+            select: userSelect,
+        };
+        const userEntity = await this.prisma.user.findUnique(args);
+        return userEntity ? plainToClass(UserModel, userEntity) : null;
     }
 
     async users(params: {
@@ -20,40 +31,38 @@ export class UserService {
         cursor?: Prisma.UserWhereUniqueInput;
         where?: Prisma.UserWhereInput;
         orderBy?: Prisma.UserOrderByWithRelationInput;
-    }): Promise<User[]> {
+    }): Promise<UserModel[]> {
         const { skip, take, cursor, where, orderBy } = params;
-        return this.prisma.user.findMany({
+        const usersEntities = await this.prisma.user.findMany({
             skip,
             take,
             cursor,
             where,
             orderBy,
         });
+        return plainToClass(UserModel, usersEntities);
     }
 
-    async store(data: Prisma.UserCreateInput): Promise<User> {
-        // ToDO remove pass
-        return this.prisma.user.create({
-            data,
-        });
+    async store(data: Prisma.UserCreateInput): Promise<UserModel | null> {
+        const userEntity = await this.prisma.user.create({ data });
+        return userEntity ? plainToClass(UserModel, userEntity) : null;
     }
 
     async update(params: {
         where: Prisma.UserWhereUniqueInput;
         data: Prisma.UserUpdateInput;
-    }): Promise<User> {
+    }): Promise<UserModel> {
         const { where, data } = params;
-        return this.prisma.user.update({
-            data,
-            where,
-        });
+        const userEntity = await this.prisma.user.update({ data, where });
+        // ToDo checkUpdresult
+        return userEntity ? plainToClass(UserModel, userEntity) : null;
     }
-
-    async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
-        return this.prisma.user.delete({
-            where,
-        });
-    }
+    //
+    // async delete(where: Prisma.UserWhereUniqueInput): Promise<UserModel> {
+    //     const userEntity = await this.prisma.user.delete({ where });
+    //     // ToDo checkDelresult
+    //     return userEntity ? plainToClass(UserModel, userEntity) : null;
+    // }
 
     async isEmailAlreadyExists(email: string): Promise<boolean> {
         const user = await this.findOne({ email });

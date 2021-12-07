@@ -6,10 +6,15 @@ import { CanActivate, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from 'jsonwebtoken';
 import { Observable } from 'rxjs';
+import { UserService } from '../../user/user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor(private authService: AuthService, private configService: ConfigService) {
+    constructor(
+        private authService: AuthService,
+        private configService: ConfigService,
+        private userService: UserService
+    ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
@@ -18,10 +23,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     async validate(payload: JwtPayload): Promise<JwtPayload> {
-        return {
-            id: payload.id,
-            created: new Date(payload.iat),
-            expired: new Date(payload.exp),
-        };
+        return this.userService.findOne({ id: payload.id });
     }
 }
