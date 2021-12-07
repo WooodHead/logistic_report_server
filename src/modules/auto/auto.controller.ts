@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
 import { Auto as AutoModel, Prisma, User } from '@prisma/client';
 import { AutoService } from './auto.service';
 import { AutoBrandModel } from '../autoBrand/models/autoBrand.model';
@@ -6,13 +6,14 @@ import { CompanyModel } from '../company/models/company.model';
 import { AutoCreateDto } from './models/auto-create.dto';
 import { AutoUpdateDto } from './models/auto-update.dto';
 import { UserModel } from '../user/models/user.model';
+import { AutoDeleteDto } from './models/auto-delete.dto';
 
 // @UseGuards(AuthGuard('jwt'))
-@Controller()
+@Controller('autos')
 export class AutoController {
     constructor(private readonly autoService: AutoService) {}
 
-    @Get('autos')
+    @Get()
     index(@Req() req: { user: User }): Promise<AutoModel[]> {
         return this.autoService.findAll({
             where: { userId: req.user.id },
@@ -23,7 +24,7 @@ export class AutoController {
         });
     }
 
-    @Put('autos')
+    @Put()
     async update(@Body() autoData: AutoUpdateDto, @Req() req: { user: User }): Promise<AutoModel> {
         const { autoBrand, company, id, companyId, autoBrandId, userId, ...restData } = autoData;
 
@@ -45,7 +46,7 @@ export class AutoController {
         return this.autoService.auto({ id }, params);
     }
 
-    @Post('autos')
+    @Post()
     async store(
         @Body() autoData: AutoCreateDto,
         @Req() req: { user: UserModel }
@@ -71,5 +72,13 @@ export class AutoController {
         };
 
         return this.autoService.auto({ id }, params);
+    }
+
+    @Delete()
+    bulkDelete(
+        @Body() autoDeleteDto: AutoDeleteDto,
+        @Req() req: { user: UserModel }
+    ): Promise<Record<string, never>> {
+        return this.autoService.bulkRemove(autoDeleteDto.autoIds, req.user.id);
     }
 }
