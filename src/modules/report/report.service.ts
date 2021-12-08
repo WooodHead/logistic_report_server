@@ -68,6 +68,16 @@ export class ReportService {
 
         return Promise.all(butchOfPromises);
     }
+
+    async bulkRemove(reportIds: number[], userId: number): Promise<Record<string, never>> {
+        await this.prisma.report.deleteMany({
+            where: {
+                id: { in: reportIds },
+                userId,
+            },
+        });
+        return {};
+    }
     //
     // async updateAuto(params: { where: Prisma.AutoWhereUniqueInput; data: Prisma.AutoUpdateInput }): Promise<Auto.model.ts> {
     //     const { where, data } = params;

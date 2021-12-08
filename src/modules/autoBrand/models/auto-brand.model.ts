@@ -1,10 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { IsNotEmpty } from 'class-validator';
-
-export class CustomAutoBrandCreateInput implements Prisma.AutoBrandUncheckedCreateInput {
-    @IsNotEmpty()
-    name: string;
-}
+import { AutoBrandUncheckedCreateInput } from './auto-brand.dto';
 
 export class AutoBrandModel {
     static update(
@@ -20,7 +16,8 @@ export class AutoBrandModel {
     }
 
     static createOrConnect(
-        autoBrand: Prisma.AutoBrandUncheckedCreateInput
+        autoBrand: AutoBrandUncheckedCreateInput,
+        userId: number
     ): Prisma.AutoBrandCreateNestedOneWithoutAutosInput {
         if (!autoBrand) {
             return;
@@ -28,7 +25,7 @@ export class AutoBrandModel {
 
         return {
             connectOrCreate: {
-                create: autoBrand,
+                create: { ...autoBrand, userId },
                 where: { id: autoBrand.id || 0 },
             },
         };

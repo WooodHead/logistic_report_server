@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
 import { Auto as AutoModel, Prisma, User } from '@prisma/client';
 import { AutoService } from './auto.service';
-import { AutoBrandModel } from '../autoBrand/models/autoBrand.model';
+import { AutoBrandModel } from '../autoBrand/models/auto-brand.model';
 import { CompanyModel } from '../company/models/company.model';
 import { AutoCreateDto } from './models/auto-create.dto';
 import { AutoUpdateDto } from './models/auto-update.dto';
@@ -57,8 +57,8 @@ export class AutoController {
 
         const autoCreateInput: Prisma.AutoCreateInput = {
             ...restData,
-            autoBrand: AutoBrandModel.createOrConnect({ ...autoBrand, userId: req.user.id }),
-            company: CompanyModel.createOrConnect({ ...company, userId: req.user.id }),
+            autoBrand: AutoBrandModel.createOrConnect(autoBrand, req.user.id),
+            company: CompanyModel.createOrConnect(company, req.user.id),
             user: UserModel.connect(req.user),
         };
 

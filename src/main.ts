@@ -5,12 +5,14 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { validatorOptions } from './config/validation-options.config';
 import * as bodyParser from 'body-parser';
 import { useContainer } from 'class-validator';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
     app.enableCors();
     app.useGlobalFilters(new ErrorFilter());
+    app.useGlobalInterceptors(new LoggingInterceptor());
     app.useGlobalPipes(
         new ValidationPipe({
             ...validatorOptions,

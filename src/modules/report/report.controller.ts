@@ -1,6 +1,6 @@
 import {
     Body,
-    Controller,
+    Controller, Delete,
     Get,
     HttpCode,
     HttpStatus,
@@ -25,6 +25,8 @@ import { User } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { UserModel } from '../user/models/user.model';
 import { CompanyService } from '../company/company.service';
+import { AutoDeleteDto } from '../auto/models/auto-delete.dto';
+import { ReportDeleteDto } from './models/report-delete.dto';
 
 // @UseGuards(AuthGuard('jwt'))
 @Controller('reports')
@@ -169,5 +171,13 @@ export class ReportController {
             cargoOwnerId: maxCargoOwnerId,
             autoNumRates: maxAutoNumRates,
         };
+    }
+
+    @Delete()
+    bulkDelete(
+        @Body() reportDeleteDto: ReportDeleteDto,
+        @Req() req: { user: UserModel }
+    ): Promise<Record<string, never>> {
+        return this.reportService.bulkRemove(reportDeleteDto.reportIds, req.user.id);
     }
 }

@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { CompanyUncheckedCreateInput } from './company-create.dto';
 
 export class CompanyModel {
     static update(
@@ -24,7 +25,8 @@ export class CompanyModel {
     }
 
     static createOrConnect(
-        company: Prisma.CompanyUncheckedCreateInput
+        company: CompanyUncheckedCreateInput,
+        userId: number
     ): Prisma.CompanyCreateNestedOneWithoutAutosInput {
         if (!company) {
             return;
@@ -32,7 +34,7 @@ export class CompanyModel {
 
         return {
             connectOrCreate: {
-                create: company,
+                create: { ...company, userId },
                 where: { id: company.id || 0 },
             },
         };

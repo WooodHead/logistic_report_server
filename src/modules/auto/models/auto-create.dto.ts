@@ -1,7 +1,7 @@
 import { IsNotEmpty, ValidateNested } from 'class-validator';
 import { Prisma } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { CustomAutoBrandCreateInput } from '../../autoBrand/models/autoBrand.model';
+import { AutoBrandDto } from '../../autoBrand/models/auto-brand.dto';
 import { CompanyCreateDto } from '../../company/models/company-create.dto';
 
 type AutoUncheckedCreateInput = Omit<Prisma.AutoUncheckedCreateInput, 'userId'>;
@@ -20,6 +20,6 @@ export class AutoCreateDto implements AutoUncheckedCreateInput {
     company?: CompanyCreateDto | null;
 
     @ValidateNested({ each: true })
-    @Type(() => CustomAutoBrandCreateInput)
-    autoBrand?: CustomAutoBrandCreateInput | null;
+    @Type(() => AutoBrandDto)
+    autoBrand?: AutoBrandDto | null;
 }
