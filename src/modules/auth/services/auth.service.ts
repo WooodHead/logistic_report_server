@@ -15,13 +15,7 @@ export class AuthService {
     ) {}
 
     async validateUser(email: string, pass: string): Promise<UserModel | null> {
-        const user: UserModel = await this.userService.findOne({ email });
-
-        if (!user) {
-            return null;
-        }
-
-        return user.password === pass ? user : null;
+        return this.userService.getUserByCredentials(email, pass);
     }
 
     login(user: UserModel): LoginResponseDto {
@@ -51,6 +45,8 @@ export class AuthService {
     async getUserByToken(jwtToken: string): Promise<UserModel | null> {
         try {
             const decodeData: { id: number } = this.jwtService.decode(jwtToken) as { id: number };
+            console.log("-> decodeData", decodeData);
+            console.log("-> jwtToken", jwtToken);
             return this.userService.findOne({ id: decodeData.id });
         } catch (e) {
             return null;

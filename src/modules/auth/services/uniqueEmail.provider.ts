@@ -28,7 +28,8 @@ export class UniqueEmailProvider implements ValidatorConstraintInterface {
     constructor(protected readonly userService: UserService) {}
 
     async validate(value: any, args: ValidationArguments): Promise<boolean> {
-        return this.userService.isEmailAlreadyExists(value);
+        const isExists = await this.userService.isEmailAlreadyExists(value);
+        return !isExists;
     }
 }
 

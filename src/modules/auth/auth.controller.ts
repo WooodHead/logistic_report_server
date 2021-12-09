@@ -7,7 +7,7 @@ import {
     HttpStatus,
     UseInterceptors,
     ClassSerializerInterceptor,
-    Req,
+    Req, UnprocessableEntityException,
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { UserService } from '../user/user.service';
@@ -26,6 +26,13 @@ export class AuthController {
     @Public()
     @Post('register')
     async register(@Body() user: UserDto): Promise<LoginResponseDto> {
+        // const isUserExists = await this.userService.isEmailAlreadyExists(user.email);
+        // console.log("-> isUserExists", isUserExists);
+        //
+        // if (isUserExists) {
+        //     throw new UnprocessableEntityException('Email is already exists');
+        // }
+
         const createdUser: UserModel = await this.userService.store(user);
         return this.authService.login(createdUser);
     }
@@ -46,10 +53,7 @@ export class AuthController {
         @Body() newPasswordDto: NewPasswordDto
     ) {
         const user: UserModel = await this.authService.getUserByToken(newPasswordDto.accessToken);
-        await this.userService.update({
-            where: { id: user.id },
-            data: { password: newPasswordDto.password },
-        });
+        await this.userService.changePassword(user.id, newPasswordDto.password);
         return this.authService.login(user);
     }
 

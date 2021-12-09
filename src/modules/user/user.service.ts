@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../services/prisma.service';
 import { User as UserEntity, Prisma } from '@prisma/client';
 import { plainToClass } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
 import { UserModel } from './models/user.model';
 
 @Injectable()
@@ -44,7 +45,12 @@ export class UserService {
     }
 
     async store(data: Prisma.UserCreateInput): Promise<UserModel | null> {
-        const userEntity = await this.prisma.user.create({ data });
+        const user = {
+            ...data,
+            password: await bcrypt.hash(data.password, 10),
+        };
+
+        const userEntity = await this.prisma.user.create({ data: user });
         return userEntity ? plainToClass(UserModel, userEntity) : null;
     }
 
@@ -66,6 +72,25 @@ export class UserService {
 
     async isEmailAlreadyExists(email: string): Promise<boolean> {
         const user = await this.findOne({ email });
-        return !user;
+        console.log("-> user", user);
+        return !!user;
+    }
+
+    async changePassword(userId: number, newPassword: string) {
+        return this.update({
+            where: { id: userId },
+            data: { password: await bcrypt.hash(newPassword, 10) },
+        });
+    }
+
+    async getUserByCredentials(email: string, pass: string): Promise<UserModel | null> {
+        const user: UserModel = await this.findOne({ email });
+
+        if (!user) {
+            return null;
+        }
+
+        const isPassMatches = await bcrypt.compare(pass, user.password);
+        return isPassMatches ? user : null;
     }
 }
