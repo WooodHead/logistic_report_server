@@ -1,19 +1,29 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Get,
+    Post,
+    Req,
+    UseGuards,
+    UseInterceptors,
+} from '@nestjs/common';
 import { User as UserModel, Prisma } from '@prisma/client';
 import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 
 // @UseGuards(AuthGuard('jwt'))
-@Controller()
+@Controller('users')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
     constructor(private readonly userService: UserService) {}
 
-    @Get('users')
-    index(): Promise<UserModel[]> {
-        return this.userService.users({});
+    @Get()
+    user(@Req() req: { user: UserModel }): Promise<UserModel> {
+        return this.userService.findOne({ id: req.user.id });
     }
 
-    @Post('users')
+    @Post()
     store(@Body() userData: Prisma.UserCreateInput): Promise<UserModel> {
         return this.userService.store(userData);
     }

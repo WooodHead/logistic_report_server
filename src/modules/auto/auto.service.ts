@@ -6,7 +6,7 @@ import { Auto, Prisma } from '@prisma/client';
 export class AutoService {
     constructor(private prisma: PrismaService) {}
 
-    async auto(
+    async findOne(
         userWhereUniqueInput: Prisma.AutoWhereUniqueInput,
         params: {
             include?: Prisma.AutoInclude;
@@ -49,6 +49,8 @@ export class AutoService {
         data: Prisma.AutoUpdateInput;
     }): Promise<Auto> {
         const { where, data } = params;
+        console.log("-> data", data);
+        console.log("-> where", where);
         return this.prisma.auto.update({
             data,
             where,
@@ -63,6 +65,12 @@ export class AutoService {
             },
         });
         return {};
+    }
+
+    async countUserAutos(userId: number): Promise<number> {
+        return this.prisma.auto.count({
+            where: { userId },
+        });
     }
     //
     // async deleteAuto(where: Prisma.UserWhereUniqueInput): Promise<Auto.model.ts> {

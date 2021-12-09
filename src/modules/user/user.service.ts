@@ -25,7 +25,7 @@ export class UserService {
         return userEntity ? plainToClass(UserModel, userEntity) : null;
     }
 
-    async users(params: {
+    async findAll(params: {
         skip?: number;
         take?: number;
         cursor?: Prisma.UserWhereUniqueInput;

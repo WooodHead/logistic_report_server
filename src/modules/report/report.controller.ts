@@ -1,6 +1,7 @@
 import {
     Body,
-    Controller, Delete,
+    Controller,
+    Delete, ForbiddenException,
     Get,
     HttpCode,
     HttpStatus,
@@ -27,6 +28,8 @@ import { UserModel } from '../user/models/user.model';
 import { CompanyService } from '../company/company.service';
 import { AutoDeleteDto } from '../auto/models/auto-delete.dto';
 import { ReportDeleteDto } from './models/report-delete.dto';
+import { MomentService } from '../../services/moment.service';
+import { ConfigService } from '@nestjs/config';
 
 // @UseGuards(AuthGuard('jwt'))
 @Controller('reports')
@@ -35,7 +38,9 @@ export class ReportController {
         private readonly reportService: ReportService,
         private readonly routeService: RouteService,
         private readonly cargoService: CargoService,
-        private readonly companyService: CompanyService
+        private readonly companyService: CompanyService,
+        private readonly momentService: MomentService,
+        private readonly configService: ConfigService
     ) {}
 
     @UseInterceptors(DateFormatInterceptor)
@@ -43,8 +48,20 @@ export class ReportController {
     async index(
         @Query('from') from,
         @Query('to') to,
-        @Req() req: { user: User }
+        @Req() req: { user: UserModel }
     ): Promise<ReportModel[]> {
+        // Check subscription
+        if (!req.user.isPro) {
+            const enableDiffDays = parseInt(this.configService.get('REPORT_DAYS'), 10);
+            const currentDiffDays = this.momentService.dateDiffInDays(from);
+            if (currentDiffDays > enableDiffDays) {
+                throw new ForbiddenException(
+                    `Sorry, You can view the report only for the last ${enableDiffDays} days.` +
+                        ' Buy subscription for remove limitations'
+                ); // ToDo i18n
+            }
+        }
+
         // ToDo make Pipe
         if (!Date.parse(from) || !Date.parse(to)) {
             return [];
@@ -91,10 +108,7 @@ export class ReportController {
                 route: RouteModel.connect(routeFromDb),
                 cargo: CargoModel.connect(cargoFromDb),
                 cargoOwner: CompanyModel.connect(cargoOwnerFromDb),
-                autoOwner: CompanyModel.connect({
-                    ...autoOwner,
-                    userId: req.user.id,
-                }),
+                autoOwner: CompanyModel.connect(autoOwner),
                 user: UserModel.connect(req.user),
             });
         });

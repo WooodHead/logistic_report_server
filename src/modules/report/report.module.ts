@@ -8,11 +8,20 @@ import { CargoModule } from '../cargo/cargo.module';
 import { RouteModule } from '../route/route.module';
 import { ChartsController } from './charts.controller';
 import { CompanyService } from '../company/company.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
     imports: [CargoModule, RouteModule],
     controllers: [ReportController, ChartsController],
-    providers: [ReportService, PrismaService, DateFormatInterceptor, MomentService, CompanyService],
+    providers: [
+        ReportService,
+        PrismaService,
+        DateFormatInterceptor,
+        MomentService,
+        CompanyService,
+        MomentService,
+        ConfigService,
+    ],
     exports: [],
 })
 export class ReportModule {}

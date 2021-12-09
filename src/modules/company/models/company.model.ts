@@ -3,18 +3,21 @@ import { CompanyUncheckedCreateInput } from './company-create.dto';
 
 export class CompanyModel {
     static update(
-        company: Prisma.CompanyUncheckedCreateInput
+        company: CompanyUncheckedCreateInput,
+        userId: number
     ): Prisma.CompanyUpdateOneWithoutAutosInput {
         if (!company) {
             return;
         }
 
         return {
-            update: company,
+            update: { ...company, userId },
         };
     }
 
-    static connect(company: Prisma.CompanyUncheckedCreateInput) {
+    static connect(
+        company: CompanyUncheckedCreateInput
+    ): Prisma.CompanyCreateNestedOneWithoutAutosInput {
         if (!company) {
             return {};
         }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post, Put, Req } from '@nestjs/common';
+import { Body, Controller, Delete, ForbiddenException, Get, Post, Put, Req } from '@nestjs/common';
 import { Auto as AutoModel, Prisma, User } from '@prisma/client';
 import { AutoService } from './auto.service';
 import { AutoBrandModel } from '../autoBrand/models/auto-brand.model';
@@ -7,21 +7,42 @@ import { AutoCreateDto } from './models/auto-create.dto';
 import { AutoUpdateDto } from './models/auto-update.dto';
 import { UserModel } from '../user/models/user.model';
 import { AutoDeleteDto } from './models/auto-delete.dto';
+import { ConfigService } from '@nestjs/config';
+import { AutosResponseDto } from './models/autos-response.dto';
 
 // @UseGuards(AuthGuard('jwt'))
 @Controller('autos')
 export class AutoController {
-    constructor(private readonly autoService: AutoService) {}
+    constructor(
+        private readonly autoService: AutoService,
+        private readonly configService: ConfigService
+    ) {}
 
     @Get()
-    index(@Req() req: { user: User }): Promise<AutoModel[]> {
-        return this.autoService.findAll({
+    async index(@Req() req: { user: UserModel }): Promise<AutosResponseDto> {
+        // Check subscription
+        let userAutosCount;
+        let warning;
+        let maxAutos;
+        if (!req.user.isPro) {
+            userAutosCount = await this.autoService.countUserAutos(req.user.id);
+            maxAutos = parseInt(this.configService.get('MAX_AUTOS'), 10);
+            if (userAutosCount > maxAutos) {
+                warning = `Showing only last ${maxAutos} autos. For show all autos, buy subscription!`;
+            }
+        }
+
+        const autos = await this.autoService.findAll({
             where: { userId: req.user.id },
             include: {
                 company: true,
                 autoBrand: true,
             },
+            orderBy: { id: Prisma.SortOrder.desc },
+            ...(!req.user.isPro && maxAutos && { take: maxAutos }),
         });
+
+        return { autos, warning };
     }
 
     @Put()
@@ -31,7 +52,7 @@ export class AutoController {
         const autoUpdateInput: Prisma.AutoUpdateInput = {
             ...restData,
             autoBrand: AutoBrandModel.update(autoBrand),
-            company: CompanyModel.update({ ...company, userId: req.user.id }),
+            company: CompanyModel.update(company, req.user.id),
         };
 
         await this.autoService.updateAuto({
@@ -43,7 +64,7 @@ export class AutoController {
             include: { company: true, autoBrand: true },
         };
 
-        return this.autoService.auto({ id }, params);
+        return this.autoService.findOne({ id }, params);
     }
 
     @Post()
@@ -52,6 +73,16 @@ export class AutoController {
         @Req() req: { user: UserModel }
     ): Promise<AutoModel> {
         // Check subscription
+        if (!req.user.isPro) {
+            const userAutosCount = await this.autoService.countUserAutos(req.user.id);
+            const maxAutos = this.configService.get('MAX_AUTOS');
+            if (userAutosCount >= maxAutos) {
+                throw new ForbiddenException(
+                    `Sorry, with free plan you can store only ${maxAutos} autos.` +
+                        ' Buy subscription for add unlimited amount of autos'
+                ); // ToDo i18n
+            }
+        }
 
         const { autoBrand, company, ...restData } = autoData;
 
@@ -71,7 +102,7 @@ export class AutoController {
             },
         };
 
-        return this.autoService.auto({ id }, params);
+        return this.autoService.findOne({ id }, params);
     }
 
     @Delete()
