@@ -12,4 +12,8 @@ export class MomentService {
         const duration = moment.duration(moment(now).diff(date));
         return Math.floor(duration.asDays());
     }
+
+    weekDayByDate(date) {
+        return this.dateTimeFormat(date, 'dddd');
+    }
 }

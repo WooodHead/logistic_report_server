@@ -2,11 +2,15 @@ import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { User } from '@prisma/client';
 import { UserModel } from '../user/models/user.model';
+import { MomentService } from '../../services/moment.service';
 
 // @UseGuards(AuthGuard('jwt'))
 @Controller('charts')
 export class ChartsController {
-    constructor(private readonly reportService: ReportService) {}
+    constructor(
+        private readonly reportService: ReportService,
+        private readonly momentService: MomentService
+    ) {}
 
     @Get('amount-per-year')
     async amountPerYear(@Req() req: { user: User }): Promise<any> {
@@ -64,5 +68,48 @@ export class ChartsController {
             repThisYear.amountThisYear = repThisYear.amountThisYear || 0;
             return repThisYear;
         });
+    }
+
+    @Get('races-per-week')
+    async racesPerWeek(@Req() req: { user: UserModel }): Promise<any> {
+        const weekRacesAmount = await this.reportService.rawQuery(`
+            SELECT t.date, COUNT(t.id) as amount
+            FROM logistic_report.Report as t
+                     JOIN logistic_report.Route R on t.routeId = R.id
+            WHERE date BETWEEN DATE_SUB(NOW(), INTERVAL 8 DAY) AND NOW()
+              AND t.userId = ${req.user.id}
+            GROUP BY date;
+        `);
+
+        const weekDays = [];
+        const weekValues = [];
+
+        weekRacesAmount.forEach(({ date, amount }) => {
+            weekDays.push(this.momentService.weekDayByDate(date));
+            weekValues.push(amount);
+        });
+
+        return { weekDays, weekValues };
+    }
+
+    @Get('cargo')
+    async cargo(@Req() req: { user: UserModel }): Promise<any> {
+        const cargosAmount = await this.reportService.rawQuery(`
+            SELECT report.cargoId, COUNT(report.id) as amount, cargo.name
+            FROM logistic_report.Report as report
+                     JOIN logistic_report.Cargo cargo on report.cargoId = cargo.id
+            WHERE report.userId = ${req.user.id}
+            GROUP BY report.cargoId;
+        `);
+
+        const cargoNames = [];
+        const cargoValues = [];
+
+        cargosAmount.forEach(({ name, amount }) => {
+            cargoNames.push(name);
+            cargoValues.push(amount);
+        });
+
+        return { cargoNames, cargoValues };
     }
 }
