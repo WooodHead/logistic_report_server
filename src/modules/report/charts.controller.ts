@@ -84,9 +84,23 @@ export class ChartsController {
         const weekDays = [];
         const weekValues = [];
 
-        weekRacesAmount.forEach(({ date, amount }) => {
-            weekDays.push(this.momentService.weekDayByDate(date));
-            weekValues.push(amount);
+        const dateAmountMap = {};
+        weekRacesAmount.forEach((data) => {
+            const date = this.momentService.dateTimeFormat(data.date, 'YYYY-MM-DD');
+            dateAmountMap[date] = data.amount;
+        });
+
+        const dayAmountMap = {};
+
+        for (let i = 7; i >= 0; i--) {
+            const date = this.momentService.extractFromToday(i, 'd');
+            const dayName = this.momentService.weekDayByDate(date);
+            dayAmountMap[i === 0 ? 'Today' : dayName] = dateAmountMap[date] || 0;
+        }
+
+        Object.keys(dayAmountMap).forEach((k) => {
+            weekDays.push(k);
+            weekValues.push(dayAmountMap[k]);
         });
 
         return { weekDays, weekValues };

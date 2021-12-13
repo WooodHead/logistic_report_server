@@ -16,4 +16,8 @@ export class MomentService {
     weekDayByDate(date) {
         return this.dateTimeFormat(date, 'dddd');
     }
+
+    extractFromToday(number, units) {
+        return moment().subtract(number, units).format('YYYY-MM-DD');
+    }
 }
