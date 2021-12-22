@@ -6,10 +6,14 @@ import { validatorOptions } from './config/validation-options.config';
 import * as bodyParser from 'body-parser';
 import { useContainer } from 'class-validator';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const staticAssetsPath = join(__dirname, '../assets');
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
+    app.useStaticAssets(staticAssetsPath);
     app.enableCors();
     app.useGlobalFilters(new ErrorFilter());
     app.useGlobalInterceptors(new LoggingInterceptor());
