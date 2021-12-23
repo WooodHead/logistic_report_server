@@ -154,7 +154,7 @@ export class ReportController {
                 report.cargoOwnerId && allCargoOwnerIds.push(report.cargoOwnerId);
             });
         });
-        console.log(allCargoOwnerIds);
+
         const maxCargoId = maxFrequencyInArray(allCargoIds),
             maxRouteId = maxFrequencyInArray(allRouteIds),
             maxCargoOwnerId = maxFrequencyInArray(allCargoOwnerIds);
