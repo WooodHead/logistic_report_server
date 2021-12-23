@@ -7,7 +7,7 @@ import {
     HttpStatus,
     UseInterceptors,
     ClassSerializerInterceptor,
-    Req, UnprocessableEntityException,
+    Req,
 } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { UserService } from '../user/user.service';

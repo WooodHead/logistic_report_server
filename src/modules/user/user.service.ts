@@ -22,6 +22,7 @@ export class UserService {
             },
             select: userSelect,
         };
+
         const userEntity = await this.prisma.user.findUnique(args);
         return userEntity ? plainToClass(UserModel, userEntity) : null;
     }
@@ -71,8 +72,10 @@ export class UserService {
     // }
 
     async isEmailAlreadyExists(email: string): Promise<boolean> {
+        if (!email) {
+            return false;
+        }
         const user = await this.findOne({ email });
-        console.log("-> user", user);
         return !!user;
     }
 
