@@ -49,8 +49,6 @@ export class AutoService {
         data: Prisma.AutoUpdateInput;
     }): Promise<Auto> {
         const { where, data } = params;
-        console.log("-> data", data);
-        console.log("-> where", where);
         return this.prisma.auto.update({
             data,
             where,
