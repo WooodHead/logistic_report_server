@@ -103,12 +103,6 @@ model Report {
   created_at   DateTime  @default(now())
 }
 
-enum RateUnits {
-  per_mile
-  per_weight
-  fixed
-}
-
 model Subscription {
   id                Int               @id @default(autoincrement())
   subscriptionId    String            @unique
@@ -125,6 +119,12 @@ model ContactUs {
   id    Int    @id @default(autoincrement())
   email String
   message   String
+}
+
+enum RateUnits {
+  per_mile
+  per_weight
+  fixed
 }
 
 enum SubscriptionPlans {
