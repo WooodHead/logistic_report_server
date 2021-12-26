@@ -8,10 +8,16 @@ import { useContainer } from 'class-validator';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import * as fs from 'fs';
 
 async function bootstrap() {
     const staticAssetsPath = join(__dirname, '../assets');
-    const app = await NestFactory.create<NestExpressApplication>(AppModule);
+    const httpsOptions = {
+        key: fs.readFileSync(join(__dirname, 'ssl/private.key')),
+        cert: fs.readFileSync(join(__dirname, 'ssl/certificate.crt')),
+        ca: fs.readFileSync(join(__dirname, 'ssl/ca_bundle.crt')),
+    };
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, { httpsOptions });
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
     app.useStaticAssets(staticAssetsPath);
     app.enableCors();
