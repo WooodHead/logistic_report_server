@@ -9,6 +9,7 @@ import { UserModule } from '../user/user.module';
 import { SubscriptionService } from './subscription.service';
 import { AuthModule } from '../auth/auth.module';
 import { PrismaService } from '../../services/prisma.service';
+import { MomentService } from '../../services/moment.service';
 
 @Module({
     controllers: [LiqPayController],
@@ -16,6 +17,6 @@ import { PrismaService } from '../../services/prisma.service';
     exports: [
         // StripeService
     ],
-    providers: [LiqPayService, ConfigService, SubscriptionService, PrismaService],
+    providers: [LiqPayService, ConfigService, SubscriptionService, PrismaService, MomentService],
 })
 export class LiqPayModule {}

@@ -105,7 +105,8 @@ model Report {
 
 model Subscription {
   id                Int               @id @default(autoincrement())
-  subscriptionId    String            @unique
+  uniqId            String            @unique
+  orderId           String            @unique
   userId            Int
   user              User              @relation(fields: [userId], references: [id])
   plan              SubscriptionPlans

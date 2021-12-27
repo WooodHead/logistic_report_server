@@ -20,4 +20,8 @@ export class MomentService {
     extractFromToday(number, units) {
         return moment().subtract(number, units).format('YYYY-MM-DD');
     }
+
+    addToToday(number, units) {
+        return moment().subtract(number, units).format('YYYY-MM-DD');
+    }
 }

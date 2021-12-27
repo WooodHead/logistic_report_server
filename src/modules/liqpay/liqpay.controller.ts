@@ -1,24 +1,27 @@
 import {
+    BadRequestException,
     Body,
     Controller,
     Get,
     HttpCode,
     HttpStatus,
     InternalServerErrorException,
-    Logger, Post,
+    Logger,
+    Post,
     Query,
     Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import Stripe from 'stripe';
-import { ConfigService } from '@nestjs/config';
+// import Stripe from 'stripe';
+// import { ConfigService } from '@nestjs/config';
 import { LiqPayService } from './liqpay.service';
-import { UserService } from '../user/user.service';
-import { StripeCallbackQuery } from './models/liqpay-cb.model';
-import { AuthService } from '../auth/services/auth.service';
-import { SubscriptionPlans } from './subscription.service';
+// import { UserService } from '../user/user.service';
+// import { StripeCallbackQuery } from './models/liqpay-cb.model';
+// import { AuthService } from '../auth/services/auth.service';
+// import { SubscriptionPlans } from './subscription.service';
 import { SubscriptionQuery } from './models/subscription-query.model';
 import { Public } from '../auth/auth.guard';
+import { LiqpaySubscriptionInterface } from './models/liqpay-subscription.interface';
 
 // @UsePipes(new ValidationPipe(validationOptions))
 @Public()
@@ -26,12 +29,7 @@ import { Public } from '../auth/auth.guard';
 export class LiqPayController {
     private readonly logger = new Logger('LiqPayModule');
 
-    constructor(
-        private readonly liqPayService: LiqPayService,
-        private readonly userService: UserService,
-        private readonly authService: AuthService,
-        private readonly configService: ConfigService
-    ) {}
+    constructor(private readonly liqPayService: LiqPayService) {}
 
     @Get('subscription')
     async liqPaySubscription(@Query() query: SubscriptionQuery) {
@@ -42,40 +40,6 @@ export class LiqPayController {
         }
         return checkoutUrl;
     }
-
-    // @Get('subscription-callback')
-    // @HttpCode(HttpStatus.FOUND)
-    // async resultCallback(
-    //     @Res({ passthrough: true }) res: Response,
-    //     @Query() query: StripeCallbackQuery,
-    //     @Query('plan') plan: SubscriptionPlans,
-    //     @Query('stripe_session_id') stripeSessionId: string,
-    //     // @Query('session_id') sessionId: string,
-    //     @Query('user_id') userIdFromSession: number
-    // ) {
-    //     console.log('query', query);
-        // const stripeSession: Stripe.Checkout.Session =
-        //     await this.stripeService.getStripeSessionById(stripeSessionId);
-        // const { customer, subscription } = stripeSession;
-        // const { userId, isExists } = await this.stripeService.getOrCreateUser(
-        //     customer,
-        //     userIdFromSession
-        // );
-        // if (!userIdFromSession) {
-        // await this.videoOrderService.attachVideoToUserBySession(userId, sessionId);
-        // }
-        // ToDo uncomment for subscriptions mode
-        // await this.stripeService.createSubscriptionForUser(userId, plan, subscription);
-        // await this.stripeService.createUnlimitedSubscriptionForUser(userId);
-        // await this.videoProcessingService.makeFullVideosForUser(userId); // ToDo without await
-
-        // const accessToken = this.authService.buildJwtAccessToken(userId);
-        // const frontUrl = this.configService.get('FRONTEND_URL');
-        // return isExists
-        //     ? res.redirect(`${frontUrl as string}auth/login`)
-        //     : res.redirect(`${frontUrl as string}auth/new-password?accessToken=${accessToken}`);
-        // return null;
-    // }
 
     @Post('webhook')
     @HttpCode(HttpStatus.OK)
@@ -89,28 +53,28 @@ export class LiqPayController {
         // console.log(signature);
         // var b = new Buffer(data, 'base64');
         const dataBuffer = Buffer.from(encodedData, 'base64');
-        const data = JSON.parse(dataBuffer.toString());
-        const { info, status, transaction_id, order_id } = data;
-        console.log("-> status", status);
-        console.log("-> transaction_id", transaction_id);
-        console.log("-> order_id", order_id);
-        console.log("-> data", data);
-        if (info) {
-            const { plan, userId: userIdPayload } = JSON.parse(info);
-            console.log("-> userIdPayload", userIdPayload);
-            console.log("-> plan", plan);
+        const dataString = dataBuffer.toString();
+        const data = JSON.parse(dataString);
+        this.logger.log(`liqpay webhook data: ${dataString}`);
+        const { info, status, action } = data as LiqpaySubscriptionInterface;
+        if (!(status === 'subscribed' || status === 'success')) {
+            this.logger.warn(`Unhandled status '${status}' in liqpay webhook`);
+            return;
         }
 
-        // const payload = JSON.parse(info);
-        // console.log(data);
+        if (!(action === 'subscribe' || action === 'regular')) {
+            this.logger.warn(`Unhandled action '${action}' in liqpay webhook`);
+            return;
+        }
+
+        const { plan, userId: userIdPayload } = JSON.parse(info);
+        this.logger.log(`liqpay webhook data info: ${info}`);
 
         // const stripeSession: Stripe.Checkout.Session =
         //     await this.liqPayService.getStripeSessionById(stripeSessionId);
         // const { customer, subscription } = stripeSession;
-        // const { userId, isExists } = await this.liqPayService.getOrCreateUser(
-        //     customer,
-        //     userIdPayload
-        // );
+        // const user: UserModel = await this.userService.findOne({ id: userIdPayload });
+        await this.liqPayService.createSubscription(data, plan, userIdPayload);
         // if (!userIdFromSession) {
             // await this.videoOrderService.attachVideoToUserBySession(userId, sessionId);
         // }

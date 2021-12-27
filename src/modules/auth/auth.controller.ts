@@ -17,23 +17,26 @@ import { NewPasswordDto } from './models/new-password.dto';
 import { UserDto } from '../user/models/user.dto';
 import { LoginResponseDto } from './models/login-response.dto';
 import { UserModel } from '../user/models/user.model';
+import { SubscriptionService } from '../liqpay/subscription.service';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
-    constructor(private readonly userService: UserService, private authService: AuthService) {}
+    constructor(
+        private readonly userService: UserService,
+        private authService: AuthService,
+        private subscriptionService: SubscriptionService
+    ) {}
 
     @Public()
     @Post('register')
     async register(@Body() user: UserDto): Promise<LoginResponseDto> {
-        // const isUserExists = await this.userService.isEmailAlreadyExists(user.email);
-        // console.log("-> isUserExists", isUserExists);
-        //
-        // if (isUserExists) {
-        //     throw new UnprocessableEntityException('Email is already exists');
-        // }
-
-        const createdUser: UserModel = await this.userService.store(user);
+        const { orderId, ...restUser } = user;
+        const createdUser: UserModel = await this.userService.store(restUser);
+        await this.subscriptionService.update({
+            where: { orderId },
+            data: { userId: createdUser.id },
+        });
         return this.authService.login(createdUser);
     }
 

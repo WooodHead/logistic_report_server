@@ -95,7 +95,8 @@ CREATE TABLE `Report` (
 -- CreateTable
 CREATE TABLE `Subscription` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `subscriptionId` VARCHAR(191) NOT NULL,
+    `uniqId` VARCHAR(191) NOT NULL,
+    `orderId` VARCHAR(191) NOT NULL,
     `userId` INTEGER NOT NULL,
     `plan` ENUM('month', 'year') NOT NULL,
     `subscriptionStart` DATETIME(3) NOT NULL,
@@ -103,7 +104,8 @@ CREATE TABLE `Subscription` (
     `trialStart` DATETIME(3) NULL,
     `trialEnd` DATETIME(3) NULL,
 
-    UNIQUE INDEX `Subscription_subscriptionId_key`(`subscriptionId`),
+    UNIQUE INDEX `Subscription_uniqId_key`(`uniqId`),
+    UNIQUE INDEX `Subscription_orderId_key`(`orderId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

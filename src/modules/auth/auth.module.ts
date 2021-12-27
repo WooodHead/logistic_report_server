@@ -10,6 +10,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './services/jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth.guard';
+import { SubscriptionService } from '../liqpay/subscription.service';
+import { PrismaService } from '../../services/prisma.service';
+// import { LiqPayModule } from '../liqpay/liqpay.module';
 
 @Module({
     controllers: [AuthController],
@@ -17,6 +20,7 @@ import { JwtAuthGuard } from './auth.guard';
         UserModule,
         PassportModule,
         ConfigModule,
+        // LiqPayModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
             useFactory: (configService: ConfigService) => ({
@@ -36,6 +40,8 @@ import { JwtAuthGuard } from './auth.guard';
     providers: [
         AuthService,
         LocalStrategy,
+        SubscriptionService,
+        PrismaService,
         UniqueEmailProvider,
         JwtStrategy,
         {

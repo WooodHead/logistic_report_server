@@ -18,11 +18,11 @@ export class Subscription implements SubscriptionEntity {
     @Transform(Subscription._dateFormat.bind(this))
     trialEnd: Date | null;
 
-    subscriptionId: string;
+    uniqId: string;
+
+    orderId: string;
 
     plan: SubscriptionPlans;
-
-    // user!: User;
 
     userId!: number;
 

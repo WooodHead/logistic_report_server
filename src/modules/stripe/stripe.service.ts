@@ -121,21 +121,21 @@ export class StripeService {
         plan: SubscriptionPlans,
         subscription: string | Stripe.Subscription | null
     ) {
-        if (!subscription || typeof subscription === 'string') {
-            throw new BadRequestException(
-                `Error on subscription creating. Subscription: ${subscription as string}`
-            );
-        }
-        // return this.subscriptionService.store(userId, plan, subscription);
-        return this.subscriptionService.store({
-            subscriptionId: subscription.id,
-            subscriptionStart: new Date(subscription.current_period_start * 1000),
-            subscriptionEnd: new Date(subscription.current_period_end * 1000),
-            trialStart: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
-            trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
-            userId,
-            plan,
-        });
+        // if (!subscription || typeof subscription === 'string') {
+        //     throw new BadRequestException(
+        //         `Error on subscription creating. Subscription: ${subscription as string}`
+        //     );
+        // }
+        // // return this.subscriptionService.store(userId, plan, subscription);
+        // return this.subscriptionService.store({
+        //     subscriptionId: subscription.id,
+        //     subscriptionStart: new Date(subscription.current_period_start * 1000),
+        //     subscriptionEnd: new Date(subscription.current_period_end * 1000),
+        //     trialStart: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
+        //     trialEnd: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
+        //     userId,
+        //     plan,
+        // });
     }
 
     async getOrCreateUser(

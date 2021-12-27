@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
 import { Prisma, Subscription as SubscriptionEntity } from '@prisma/client';
 import { PrismaService } from '../../services/prisma.service';
+import { UserModel } from '../user/models/user.model';
+import { plainToClass } from 'class-transformer';
+import { Subscription } from './models/subscription.model';
 
 export enum SubscriptionPlans {
     YEAR = 'year',
@@ -18,6 +21,18 @@ export class SubscriptionService {
 
     async store(data: Prisma.SubscriptionUncheckedCreateInput): Promise<SubscriptionEntity> {
         return this.prisma.subscription.create({ data });
+    }
+
+    async update(params: {
+        where: Prisma.SubscriptionWhereUniqueInput;
+        data: Prisma.SubscriptionUncheckedUpdateInput;
+    }): Promise<Subscription> {
+        const { where, data } = params;
+        console.log("-> data", data);
+        console.log("-> where", where);
+        const subscriptionEntity = await this.prisma.subscription.updateMany(params);
+        // ToDo checkUpdresult
+        return subscriptionEntity ? plainToClass(Subscription, subscriptionEntity) : null;
     }
 
   // async store(userId: number, plan: SubscriptionPlans, subscription: Stripe.Subscription): Promise<Subscription> {
