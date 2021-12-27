@@ -81,23 +81,29 @@ export class LiqPayController {
     @HttpCode(HttpStatus.OK)
     async liqPayWebHook(
         @Res({ passthrough: true }) res: Response,
-        @Body('data') data,
+        @Body('data') encodedData,
         @Body('signature') signature
     ) {
-        // ToDo add check https://www.liqpay.ua/documentation/api/callback
+        // ToDo add signature check https://www.liqpay.ua/documentation/api/callback
         // console.log(data);
         // console.log(signature);
         // var b = new Buffer(data, 'base64');
-        var b = Buffer.from(data, 'base64');
-        var s = b.toString();
-        console.log(s);
+        const dataBuffer = Buffer.from(encodedData, 'base64');
+        const data = JSON.parse(dataBuffer.toString());
+        const { info, status, transaction_id } = data;
+        console.log("-> data", data);
+        const { plan, userIdPayload } = info;
+        console.log("-> userIdPayload", userIdPayload);
+        console.log("-> plan", plan);
+        // const payload = JSON.parse(info);
+        // console.log(data);
 
         // const stripeSession: Stripe.Checkout.Session =
         //     await this.liqPayService.getStripeSessionById(stripeSessionId);
         // const { customer, subscription } = stripeSession;
         // const { userId, isExists } = await this.liqPayService.getOrCreateUser(
         //     customer,
-        //     userIdFromSession
+        //     userIdPayload
         // );
         // if (!userIdFromSession) {
             // await this.videoOrderService.attachVideoToUserBySession(userId, sessionId);
