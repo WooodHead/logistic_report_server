@@ -63,6 +63,7 @@ export class LiqPayService {
         }
         const successUrl = serverApiUrl + params;
         const info = JSON.stringify({ plan, userId });
+        // console.log("-> info", JSON.parse(info));
         const webHookUrl = `${this.configService.get('SERVER_API_URL') as string}liqpay/webhook`;
 
         const obj = this.liqPay.cnb_object({

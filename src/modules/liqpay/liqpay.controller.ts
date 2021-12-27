@@ -92,7 +92,7 @@ export class LiqPayController {
         const data = JSON.parse(dataBuffer.toString());
         const { info, status, transaction_id } = data;
         console.log("-> data", data);
-        const { plan, userIdPayload } = info;
+        const { plan, userIdPayload } = JSON.parse(info);
         console.log("-> userIdPayload", userIdPayload);
         console.log("-> plan", plan);
         // const payload = JSON.parse(info);
