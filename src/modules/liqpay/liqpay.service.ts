@@ -74,12 +74,12 @@ export class LiqPayService {
         const unit = plan === SubscriptionPlans.YEAR ? 'year' : 'month';
         const endDate = moment(subscription.create_date).add(1, unit);
         return this.subscriptionService.store({
-            uniqId: subscription.payment_id,
+            uniqId: '' + subscription.payment_id,
             orderId: '' + subscription.order_id,
-            subscriptionStart: startDate.format(format),
-            subscriptionEnd: endDate.format(format),
-            userId,
+            subscriptionStart: startDate.toDate(),
+            subscriptionEnd: endDate.toDate(),
             plan,
+            ...(userId && { userId }),
         });
     }
 }

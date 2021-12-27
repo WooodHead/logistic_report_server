@@ -107,8 +107,8 @@ model Subscription {
   id                Int               @id @default(autoincrement())
   uniqId            String            @unique
   orderId           String            @unique
-  userId            Int
-  user              User              @relation(fields: [userId], references: [id])
+  userId            Int?
+  user              User?              @relation(fields: [userId], references: [id])
   plan              SubscriptionPlans
   subscriptionStart DateTime
   subscriptionEnd   DateTime
