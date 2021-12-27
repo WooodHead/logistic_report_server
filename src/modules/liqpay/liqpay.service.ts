@@ -46,7 +46,7 @@ export class LiqPayService {
         // console.log("-> this.liqpay", this.liqPay);
     }
 
-    async generateSubscriptionLink(plan: SubscriptionPlans, lng: string, userId?: number) {
+    async checkoutData(plan: SubscriptionPlans, lng: string, userId?: number) {
         // ToDo reformat it
         let amount = 5;
         if (plan === SubscriptionPlans.YEAR) {
@@ -62,6 +62,7 @@ export class LiqPayService {
             params += `&user_id=${userId}`;
         }
         const successUrl = serverApiUrl + params;
+        const webHookUrl = `${this.configService.get('SERVER_API_URL') as string}liqpay/webhook`;
 
         const obj = this.liqPay.cnb_object({
             action: 'subscribe',
@@ -75,7 +76,7 @@ export class LiqPayService {
             // order_id: 'order_id_1',
             // paytypes: 'gpay',
             version: '3',
-            server_url: serverApiUrl,
+            // server_url: webHookUrl,
             // result_url: successUrl,
         });
         // console.log(obj);

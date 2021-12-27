@@ -36,11 +36,7 @@ export class LiqPayController {
     @Get('subscription')
     async stripePayment(@Query() query: SubscriptionQuery) {
         const { subscription, language, user_id: userId } = query;
-        const checkoutUrl = await this.liqPayService.generateSubscriptionLink(
-            subscription,
-            language,
-            userId
-        );
+        const checkoutUrl = await this.liqPayService.checkoutData(subscription, language, userId);
         if (!checkoutUrl) {
             throw new InternalServerErrorException('Error on building checkout subscription url');
         }
@@ -50,17 +46,53 @@ export class LiqPayController {
         // return res.json(checkoutUrl);
     }
 
-    @Post('subscription-callback')
-    async stripeSessionCallback(
+    // @Get('subscription-callback')
+    // @HttpCode(HttpStatus.FOUND)
+    // async resultCallback(
+    //     @Res({ passthrough: true }) res: Response,
+    //     @Query() query: StripeCallbackQuery,
+    //     @Query('plan') plan: SubscriptionPlans,
+    //     @Query('stripe_session_id') stripeSessionId: string,
+    //     // @Query('session_id') sessionId: string,
+    //     @Query('user_id') userIdFromSession: number
+    // ) {
+    //     console.log('query', query);
+        // const stripeSession: Stripe.Checkout.Session =
+        //     await this.stripeService.getStripeSessionById(stripeSessionId);
+        // const { customer, subscription } = stripeSession;
+        // const { userId, isExists } = await this.stripeService.getOrCreateUser(
+        //     customer,
+        //     userIdFromSession
+        // );
+        // if (!userIdFromSession) {
+        // await this.videoOrderService.attachVideoToUserBySession(userId, sessionId);
+        // }
+        // ToDo uncomment for subscriptions mode
+        // await this.stripeService.createSubscriptionForUser(userId, plan, subscription);
+        // await this.stripeService.createUnlimitedSubscriptionForUser(userId);
+        // await this.videoProcessingService.makeFullVideosForUser(userId); // ToDo without await
+
+        // const accessToken = this.authService.buildJwtAccessToken(userId);
+        // const frontUrl = this.configService.get('FRONTEND_URL');
+        // return isExists
+        //     ? res.redirect(`${frontUrl as string}auth/login`)
+        //     : res.redirect(`${frontUrl as string}auth/new-password?accessToken=${accessToken}`);
+        // return null;
+    // }
+
+    @Post('webhook')
+    async liqPayWebHook(
         @Res({ passthrough: true }) res: Response,
         @Body('data') data,
         @Body('signature') signature
     ) {
+        // ToDo add check https://www.liqpay.ua/documentation/api/callback
         // console.log(data);
         // console.log(signature);
         var b = new Buffer(data, 'base64');
         var s = b.toString();
         console.log(s);
+
         // const stripeSession: Stripe.Checkout.Session =
         //     await this.liqPayService.getStripeSessionById(stripeSessionId);
         // const { customer, subscription } = stripeSession;
