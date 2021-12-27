@@ -34,7 +34,7 @@ export class LiqPayController {
     ) {}
 
     @Get('subscription')
-    async stripePayment(@Query() query: SubscriptionQuery) {
+    async liqPaySubscription(@Query() query: SubscriptionQuery) {
         const { subscription, language, user_id: userId } = query;
         const checkoutUrl = await this.liqPayService.checkoutData(subscription, language, userId);
         if (!checkoutUrl) {
@@ -90,11 +90,17 @@ export class LiqPayController {
         // var b = new Buffer(data, 'base64');
         const dataBuffer = Buffer.from(encodedData, 'base64');
         const data = JSON.parse(dataBuffer.toString());
-        const { info, status, transaction_id } = data;
+        const { info, status, transaction_id, order_id } = data;
+        console.log("-> status", status);
+        console.log("-> transaction_id", transaction_id);
+        console.log("-> order_id", order_id);
         console.log("-> data", data);
-        const { plan, userIdPayload } = JSON.parse(info);
-        console.log("-> userIdPayload", userIdPayload);
-        console.log("-> plan", plan);
+        if (info) {
+            const { plan, userId: userIdPayload } = JSON.parse(info);
+            console.log("-> userIdPayload", userIdPayload);
+            console.log("-> plan", plan);
+        }
+
         // const payload = JSON.parse(info);
         // console.log(data);
 

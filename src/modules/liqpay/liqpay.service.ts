@@ -47,6 +47,7 @@ export class LiqPayService {
     }
 
     async checkoutData(plan: SubscriptionPlans, lng: string, userId?: number) {
+        // console.log("-> userId", userId);
         // ToDo reformat it
         let amount = 5;
         if (plan === SubscriptionPlans.YEAR) {
@@ -61,7 +62,11 @@ export class LiqPayService {
         if (userId) {
             params += `&user_id=${userId}`;
         }
-        const successUrl = serverApiUrl + params;
+
+        const orderId = Date.now();
+        const successUrl = `${
+            this.configService.get('FRONTEND_URL') as string
+        }auth/register?orderId=${orderId}`;
         const info = JSON.stringify({ plan, userId });
         // console.log("-> info", JSON.parse(info));
         const webHookUrl = `${this.configService.get('SERVER_API_URL') as string}liqpay/webhook`;
@@ -75,12 +80,12 @@ export class LiqPayService {
             language: lng,
             currency: 'USD',
             description: 'Logistic Report Subscription',
-            // order_id: 'order_id_1',
+            order_id: orderId,
             // paytypes: 'gpay',
             info,
             version: '3',
             server_url: webHookUrl,
-            // result_url: successUrl,
+            result_url: successUrl,
         });
         // console.log(obj);
         // const url = 'https://www.liqpay.ua/api/3/checkout';
