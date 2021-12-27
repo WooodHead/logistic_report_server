@@ -41,9 +41,6 @@ export class LiqPayController {
             throw new InternalServerErrorException('Error on building checkout subscription url');
         }
         return checkoutUrl;
-        // res.set('Content-Type', 'text/html');
-        // return res.send(Buffer.from(checkoutUrl));
-        // return res.json(checkoutUrl);
     }
 
     // @Get('subscription-callback')
@@ -81,6 +78,7 @@ export class LiqPayController {
     // }
 
     @Post('webhook')
+    @HttpCode(HttpStatus.OK)
     async liqPayWebHook(
         @Res({ passthrough: true }) res: Response,
         @Body('data') data,
@@ -89,7 +87,8 @@ export class LiqPayController {
         // ToDo add check https://www.liqpay.ua/documentation/api/callback
         // console.log(data);
         // console.log(signature);
-        var b = new Buffer(data, 'base64');
+        // var b = new Buffer(data, 'base64');
+        var b = Buffer.from(data, 'base64');
         var s = b.toString();
         console.log(s);
 
@@ -113,7 +112,8 @@ export class LiqPayController {
         // return isExists
         //     ? res.redirect(`${frontUrl as string}auth/login`)
         //     : res.redirect(`${frontUrl as string}auth/new-password?accessToken=${accessToken}`);
-        return null;
+        // return null;
+        return 'OK';
     }
 
     // @Post('webhook')
