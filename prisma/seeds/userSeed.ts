@@ -11,7 +11,7 @@ export const userSeeder = (n) => {
             // name: faker.name.findName(),
             name: 'Anton Polieshchuk',
             // password: faker.internet.password(),
-            password: '12345',
+            password: '$2b$10$5tGkvRONzdPxfGgG2Ma0lOSU.wYKs32G3v.jEdAoq6XOHJt1ACrNq',
             avatar: faker.internet.avatar(),
         });
     }
