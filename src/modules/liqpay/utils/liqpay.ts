@@ -23,7 +23,7 @@
  */
 
 // const request = require('request');
-import * as request from 'request';
+// import * as request from 'request';
 // import { request } from 'express';
 import * as crypto from 'crypto';
 
@@ -57,17 +57,17 @@ module.exports = function LiqPay(public_key, private_key) {
         const data = Buffer.from(JSON.stringify(params)).toString('base64');
         const signature = this.str_to_sign(private_key + data + private_key);
 
-        request.post(
-            this.host + path,
-            { form: { data: data, signature: signature } },
-            function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    callback(JSON.parse(body));
-                } else {
-                    callbackerr(error, response);
-                }
-            }
-        );
+        // request.post(
+        //     this.host + path,
+        //     { form: { data: data, signature: signature } },
+        //     function (error, response, body) {
+        //         if (!error && response.statusCode == 200) {
+        //             callback(JSON.parse(body));
+        //         } else {
+        //             callbackerr(error, response);
+        //         }
+        //     }
+        // );
     };
 
     /**
