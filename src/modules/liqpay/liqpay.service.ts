@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import * as LiqPay from './utils/liqpay';
 import { SubscriptionPlans, SubscriptionService } from './subscription.service';
 import { LiqpaySubscriptionInterface } from './models/liqpay-subscription.interface';
-import moment from 'moment';
+import * as moment from 'moment';
 
 @Injectable()
 export class LiqPayService {
