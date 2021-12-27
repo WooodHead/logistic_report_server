@@ -73,11 +73,12 @@ export class LiqPayService {
             currency: 'USD',
             description: 'Logistic Report Subscription',
             // order_id: 'order_id_1',
+            // paytypes: 'gpay',
             version: '3',
             server_url: serverApiUrl,
             // result_url: successUrl,
         });
-        console.log(obj);
+        // console.log(obj);
         // const url = 'https://www.liqpay.ua/api/3/checkout';
         // this.logger.log(`Get session from stripe API. ${url}`);
 

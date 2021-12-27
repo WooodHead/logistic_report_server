@@ -56,8 +56,11 @@ export class LiqPayController {
         @Body('data') data,
         @Body('signature') signature
     ) {
-        console.log(data);
-        console.log(signature);
+        // console.log(data);
+        // console.log(signature);
+        var b = new Buffer(data, 'base64');
+        var s = b.toString();
+        console.log(s);
         // const stripeSession: Stripe.Checkout.Session =
         //     await this.liqPayService.getStripeSessionById(stripeSessionId);
         // const { customer, subscription } = stripeSession;
