@@ -2,7 +2,7 @@
 /server/dist
 /node_modules
 dist
-src/ssl
+ssl
 
 *.env
 .env

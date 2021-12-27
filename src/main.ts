@@ -13,11 +13,15 @@ import * as fs from 'fs';
 async function bootstrap() {
     const staticAssetsPath = join(__dirname, '../assets');
     const httpsOptions = {
-        key: fs.readFileSync(join(__dirname, 'ssl/private.key')),
-        cert: fs.readFileSync(join(__dirname, 'ssl/certificate.crt')),
-        ca: fs.readFileSync(join(__dirname, 'ssl/ca_bundle.crt')),
+        key: fs.readFileSync(join(__dirname, '../ssl/private.key')),
+        cert: fs.readFileSync(join(__dirname, '../ssl/certificate.crt')),
+        ca: fs.readFileSync(join(__dirname, '../ssl/ca_bundle.crt')),
     };
-    const app = await NestFactory.create<NestExpressApplication>(AppModule, { httpsOptions });
+    let options = {};
+    if (process.env.NEST_ENV !== 'dev') {
+        options = { httpsOptions };
+    }
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, options);
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
     app.useStaticAssets(staticAssetsPath);
     app.enableCors();
