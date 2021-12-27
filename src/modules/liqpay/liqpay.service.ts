@@ -62,6 +62,7 @@ export class LiqPayService {
             params += `&user_id=${userId}`;
         }
         const successUrl = serverApiUrl + params;
+        const info = JSON.stringify({ plan, userId });
         const webHookUrl = `${this.configService.get('SERVER_API_URL') as string}liqpay/webhook`;
 
         const obj = this.liqPay.cnb_object({
@@ -75,8 +76,9 @@ export class LiqPayService {
             description: 'Logistic Report Subscription',
             // order_id: 'order_id_1',
             // paytypes: 'gpay',
+            info,
             version: '3',
-            // server_url: webHookUrl,
+            server_url: webHookUrl,
             // result_url: successUrl,
         });
         // console.log(obj);
