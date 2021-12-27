@@ -72,7 +72,7 @@ export class LiqPayService {
             language: lng,
             currency: 'USD',
             description: 'Logistic Report Subscription',
-            order_id: 'order_id_1',
+            // order_id: 'order_id_1',
             version: '3',
             server_url: serverApiUrl,
             // result_url: successUrl,
