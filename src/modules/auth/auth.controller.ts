@@ -17,7 +17,8 @@ import { NewPasswordDto } from './models/new-password.dto';
 import { UserDto } from '../user/models/user.dto';
 import { LoginResponseDto } from './models/login-response.dto';
 import { UserModel } from '../user/models/user.model';
-import { SubscriptionService } from '../liqpay/subscription.service';
+import { SubscriptionPlans, SubscriptionService } from '../liqpay/subscription.service';
+import * as moment from 'moment';
 
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -33,10 +34,26 @@ export class AuthController {
     async register(@Body() user: UserDto): Promise<LoginResponseDto> {
         const { orderId, ...restUser } = user;
         const createdUser: UserModel = await this.userService.store(restUser);
-        await this.subscriptionService.update({
-            where: { orderId },
-            data: { userId: createdUser.id },
-        });
+
+        // const startDate = moment(Date.now());
+        // const unit = 'year';
+        // const userId = undefined;
+        // const endDate = moment(Date.now()).add(1, unit);
+        // await this.subscriptionService.store({
+        //     uniqId: '' + 12111231243212,
+        //     orderId: '' + 123211244131,
+        //     subscriptionStart: startDate.toDate(),
+        //     subscriptionEnd: endDate.toDate(),
+        //     plan: 'year',
+        //     ...(userId && { userId }),
+        // });
+        if (orderId) {
+            await this.subscriptionService.update({
+                where: { orderId: '1231231231' },
+                data: { userId: createdUser.id },
+            });
+        }
+
         return this.authService.login(createdUser);
     }
 

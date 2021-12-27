@@ -97,7 +97,7 @@ CREATE TABLE `Subscription` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `uniqId` VARCHAR(191) NOT NULL,
     `orderId` VARCHAR(191) NOT NULL,
-    `userId` INTEGER NOT NULL,
+    `userId` INTEGER NULL,
     `plan` ENUM('month', 'year') NOT NULL,
     `subscriptionStart` DATETIME(3) NOT NULL,
     `subscriptionEnd` DATETIME(3) NOT NULL,
@@ -155,4 +155,4 @@ ALTER TABLE `Report` ADD CONSTRAINT `Report_cargoOwnerId_fkey` FOREIGN KEY (`car
 ALTER TABLE `Report` ADD CONSTRAINT `Report_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Subscription` ADD CONSTRAINT `Subscription_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Subscription` ADD CONSTRAINT `Subscription_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

@@ -30,7 +30,7 @@ export class SubscriptionService {
         const { where, data } = params;
         console.log("-> data", data);
         console.log("-> where", where);
-        const subscriptionEntity = await this.prisma.subscription.updateMany(params);
+        const subscriptionEntity = await this.prisma.subscription.update(params);
         // ToDo checkUpdresult
         return subscriptionEntity ? plainToClass(Subscription, subscriptionEntity) : null;
     }
