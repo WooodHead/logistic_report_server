@@ -68,11 +68,17 @@ export class LiqPayController {
             return;
         }
 
-        // ToDO handle info for regular payment
-        const { plan, userId: userIdPayload } = JSON.parse(info);
         this.logger.log(`liqpay webhook data info: ${info}`);
 
-        await this.liqPayService.createSubscription(data, plan, +userIdPayload);
+        if (action === 'subscribe') {
+            const { plan, userId: userIdPayload } = JSON.parse(info);
+            await this.liqPayService.createSubscription(data, plan, +userIdPayload);
+        }
+
+        if (action === 'regular') {
+            await this.liqPayService.updateSubscription(data);
+        }
+
         return {};
     }
 

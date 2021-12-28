@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, UnprocessableEntityException } from '@nestjs/common';
 import { InjectStripe } from 'nestjs-stripe';
 import Stripe from 'stripe';
 import { ConfigService } from '@nestjs/config';
@@ -71,7 +71,6 @@ export class LiqPayService {
         plan: SubscriptionPlans,
         userId: number
     ) {
-        const format = 'YYYY-MM-DD HH:mm:ss';
         const startDate = moment(subscription.create_date);
         const unit = plan === SubscriptionPlans.YEAR ? 'year' : 'month';
         const endDate = moment(subscription.create_date).add(1, unit);
@@ -82,6 +81,29 @@ export class LiqPayService {
             subscriptionEnd: endDate.toDate(),
             plan,
             ...(userId && { userId }),
+        });
+    }
+
+    async updateSubscription(subscription: LiqpaySubscriptionInterface) {
+        const { order_id } = subscription;
+        if (!order_id) {
+            return;
+        }
+        const existsSubscription = await this.subscriptionService.findOne({
+            where: { orderId: '' + order_id },
+            select: { plan: true },
+        });
+
+        if (!existsSubscription) {
+            throw new UnprocessableEntityException('LiqPay subscription not found for update');
+        }
+
+        const subscriptionStart = moment(subscription.create_date).toDate();
+        const unit = existsSubscription.plan === SubscriptionPlans.YEAR ? 'year' : 'month';
+        const subscriptionEnd = moment(subscription.create_date).add(1, unit).toDate();
+        return this.subscriptionService.update({
+            where: { orderId: '' + order_id },
+            data: { subscriptionStart, subscriptionEnd },
         });
     }
 

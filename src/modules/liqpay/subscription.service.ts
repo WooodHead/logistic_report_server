@@ -33,18 +33,14 @@ export class SubscriptionService {
         return subscriptionEntity ? plainToClass(Subscription, subscriptionEntity) : null;
     }
 
-  // async store(userId: number, plan: SubscriptionPlans, subscription: Stripe.Subscription): Promise<Subscription> {
-    // const subscriptionEntity = this.manager.create(Subscription, {
-    //   user_id: userId,
-    //   subscription_id: subscription.id,
-    //   subscription_start: new Date(subscription.current_period_start * 1000),
-    //   subscription_end: new Date(subscription.current_period_end * 1000),
-    //   trial_start: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
-    //   trial_end: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
-    //   plan
-    // });
-    // return this.manager.save(subscriptionEntity);
-  // }
+    async findOne(params: {
+        where: Prisma.SubscriptionWhereUniqueInput;
+        include?: Prisma.SubscriptionInclude;
+        select?: Prisma.SubscriptionSelect;
+    }): Promise<Subscription> {
+        const subscriptionEntity = await this.prisma.subscription.findUnique(params);
+        return subscriptionEntity ? plainToClass(Subscription, subscriptionEntity) : null;
+    }
 
   // async storeUnlimited(userId: number): Promise<Subscription> {
     // // ToDo fix it we accepted flat fee mode
