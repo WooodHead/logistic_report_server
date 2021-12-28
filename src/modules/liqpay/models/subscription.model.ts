@@ -24,6 +24,8 @@ export class Subscription implements SubscriptionEntity {
 
     plan: SubscriptionPlans;
 
+    email: string;
+
     // user!: User;
 
     userId!: number;

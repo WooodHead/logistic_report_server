@@ -27,10 +27,8 @@ export class SubscriptionService {
         where: Prisma.SubscriptionWhereUniqueInput;
         data: Prisma.SubscriptionUncheckedUpdateInput;
     }): Promise<Subscription> {
-        const { where, data } = params;
-        console.log("-> data", data);
-        console.log("-> where", where);
-        const subscriptionEntity = await this.prisma.subscription.update(params);
+        // ToDo carry if orderId = undefined
+        const subscriptionEntity = await this.prisma.subscription.updateMany(params);
         // ToDo checkUpdresult
         return subscriptionEntity ? plainToClass(Subscription, subscriptionEntity) : null;
     }

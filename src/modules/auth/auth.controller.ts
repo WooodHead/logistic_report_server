@@ -47,12 +47,12 @@ export class AuthController {
         //     plan: 'year',
         //     ...(userId && { userId }),
         // });
-        if (orderId) {
-            await this.subscriptionService.update({
-                where: { orderId: '1231231231' },
-                data: { userId: createdUser.id },
-            });
-        }
+        // if (orderId) {
+        //     await this.subscriptionService.update({
+        //         where: { orderId: '1231231231' },
+        //         data: { userId: createdUser.id },
+        //     });
+        // }
 
         return this.authService.login(createdUser);
     }

@@ -107,6 +107,7 @@ model Subscription {
   id                Int               @id @default(autoincrement())
   uniqId            String            @unique
   orderId           String            @unique
+  email             String?
   userId            Int?
   user              User?              @relation(fields: [userId], references: [id])
   plan              SubscriptionPlans

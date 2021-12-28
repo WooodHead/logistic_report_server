@@ -97,6 +97,7 @@ CREATE TABLE `Subscription` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `uniqId` VARCHAR(191) NOT NULL,
     `orderId` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NULL,
     `userId` INTEGER NULL,
     `plan` ENUM('month', 'year') NOT NULL,
     `subscriptionStart` DATETIME(3) NOT NULL,

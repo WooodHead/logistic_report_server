@@ -6,6 +6,8 @@ import * as LiqPay from './utils/liqpay';
 import { SubscriptionPlans, SubscriptionService } from './subscription.service';
 import { LiqpaySubscriptionInterface } from './models/liqpay-subscription.interface';
 import * as moment from 'moment';
+import { UserService } from '../user/user.service';
+import { UserModel } from '../user/models/user.model';
 
 @Injectable()
 export class LiqPayService {
@@ -17,6 +19,7 @@ export class LiqPayService {
     constructor(
         @InjectStripe() private readonly stripeClient: Stripe,
         private configService: ConfigService,
+        private readonly userService: UserService,
         private readonly subscriptionService: SubscriptionService
     ) {
         const liqPayPublicKey = this.configService.get('LIQPAY_PUBLIC_KEY');
@@ -36,9 +39,8 @@ export class LiqPayService {
         const orderId = Date.now();
         const successUrl = `${
             this.configService.get('FRONTEND_URL') as string
-        }auth/register?orderId=${orderId}`;
+        }auth/assign-subscription?orderId=${orderId}`;
         const info = JSON.stringify({ plan, userId });
-        // console.log("-> info", JSON.parse(info));
         const webHookUrl = `${this.configService.get('SERVER_API_URL') as string}liqpay/webhook`;
 
         const obj = this.liqPay.cnb_object({
@@ -80,6 +82,23 @@ export class LiqPayService {
             subscriptionEnd: endDate.toDate(),
             plan,
             ...(userId && { userId }),
+        });
+    }
+
+    async assignSubscription(email: string, orderId: string) {
+        const existsUser: UserModel = await this.userService.findOne({ email });
+
+        if (existsUser) {
+            return this.subscriptionService.update({
+                where: { orderId },
+                data: { userId: existsUser.id },
+            });
+        }
+
+        // ToDo care if orderId = undefined Updates all records
+        return this.subscriptionService.update({
+            where: { orderId },
+            data: { email },
         });
     }
 }
