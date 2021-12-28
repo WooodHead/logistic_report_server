@@ -33,6 +33,17 @@ export class SubscriptionService {
         return subscriptionEntity ? plainToClass(Subscription, subscriptionEntity) : null;
     }
 
+    // ToDO change?
+    async updateNotUnique(params: {
+        where: Prisma.SubscriptionWhereInput;
+        data: Prisma.SubscriptionUncheckedUpdateInput;
+    }): Promise<Subscription> {
+        // ToDo carry if orderId = undefined
+        const subscriptionEntity = await this.prisma.subscription.updateMany(params);
+        // ToDo checkUpdresult
+        return subscriptionEntity ? plainToClass(Subscription, subscriptionEntity) : null;
+    }
+
     async findOne(params: {
         where: Prisma.SubscriptionWhereUniqueInput;
         include?: Prisma.SubscriptionInclude;

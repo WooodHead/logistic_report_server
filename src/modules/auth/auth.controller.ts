@@ -32,27 +32,13 @@ export class AuthController {
     @Public()
     @Post('register')
     async register(@Body() user: UserDto): Promise<LoginResponseDto> {
-        const { orderId, ...restUser } = user;
-        const createdUser: UserModel = await this.userService.store(restUser);
+        const createdUser: UserModel = await this.userService.store(user);
 
-        // const startDate = moment(Date.now());
-        // const unit = 'year';
-        // const userId = undefined;
-        // const endDate = moment(Date.now()).add(1, unit);
-        // await this.subscriptionService.store({
-        //     uniqId: '' + 12111231243212,
-        //     orderId: '' + 123211244131,
-        //     subscriptionStart: startDate.toDate(),
-        //     subscriptionEnd: endDate.toDate(),
-        //     plan: 'year',
-        //     ...(userId && { userId }),
-        // });
-        // if (orderId) {
-        //     await this.subscriptionService.update({
-        //         where: { orderId: '1231231231' },
-        //         data: { userId: createdUser.id },
-        //     });
-        // }
+        // if buy subscription early
+        await this.subscriptionService.updateNotUnique({
+            where: { email: createdUser.email },
+            data: { userId: createdUser.id, email: null },
+        });
 
         return this.authService.login(createdUser);
     }

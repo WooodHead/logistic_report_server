@@ -16,6 +16,4 @@ export class UserDto implements Prisma.UserUncheckedCreateInput {
     name?: string;
 
     company?: string;
-
-    orderId?: string;
 }
