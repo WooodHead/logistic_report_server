@@ -72,7 +72,7 @@ export class LiqPayController {
         const { plan, userId: userIdPayload } = JSON.parse(info);
         this.logger.log(`liqpay webhook data info: ${info}`);
 
-        await this.liqPayService.createSubscription(data, plan, userIdPayload);
+        await this.liqPayService.createSubscription(data, plan, +userIdPayload);
         return {};
     }
 
