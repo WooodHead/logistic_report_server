@@ -37,9 +37,12 @@ export class LiqPayService {
         }
 
         const orderId = Date.now();
-        const successUrl = `${
+        const assignSubscriptionUrl = `${
             this.configService.get('FRONTEND_URL') as string
         }auth/assign-subscription?orderId=${orderId}`;
+        const adminDashboardUrl = `${
+            this.configService.get('FRONTEND_URL') as string
+        }admin/dashboard`;
         const info = JSON.stringify({ plan, userId });
         const webHookUrl = `${this.configService.get('SERVER_API_URL') as string}liqpay/webhook`;
 
@@ -57,7 +60,7 @@ export class LiqPayService {
             info,
             version: '3',
             server_url: webHookUrl,
-            result_url: successUrl,
+            result_url: userId ? adminDashboardUrl : assignSubscriptionUrl,
         });
 
         return {
