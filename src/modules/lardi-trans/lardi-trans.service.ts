@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 export class LardiTransService {
     constructor(private httpService: HttpService) {}
 
-    search(code: string): Promise<RawLardiCompanyInterface[]> {
+    searchByCode(code: string): Promise<RawLardiCompanyInterface[]> {
         const options: AxiosRequestConfig = {
             headers: {
                 Accept: 'application/json',
@@ -21,6 +21,20 @@ export class LardiTransService {
         };
         return this.httpService
             .get(`https://api.lardi-trans.com/v2/users/search?language=en&query="${code}"`, options)
+            .pipe(map((axiosResponse: AxiosResponse) => axiosResponse.data))
+            .toPromise();
+    }
+
+    searchByRef(refId: number): Promise<RawLardiCompanyInterface> {
+        const options: AxiosRequestConfig = {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: process.env.LARDI_TOKEN,
+            },
+        };
+        return this.httpService
+            .get(`https://api.lardi-trans.com/v2/users/user/${refId}`, options)
             .pipe(map((axiosResponse: AxiosResponse) => axiosResponse.data))
             .toPromise();
     }

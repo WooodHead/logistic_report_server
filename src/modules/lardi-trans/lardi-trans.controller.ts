@@ -10,15 +10,33 @@ import { LardiTransService } from './lardi-trans.service';
 export class LardiTransController {
     constructor(private readonly lardiTransService: LardiTransService) {}
 
+    // ToDo uncomment when lardi with bug with companies search firmCode: 'firmCOde'
+    // @Get('lardi-trans/search')
+    // async search(@Query('code') code: string): Promise<LardiCompany> {
+    //     const rawCompanies: RawLardiCompanyInterface[] = await this.lardiTransService.search(code);
+    //     const lardiCompany = rawCompanies.find((company) => company.firmCode === code);
+    //     if (!lardiCompany) {
+    //         return {} as LardiCompany;
+    //     }
+    //     const { name, firmCode, rating, refId } = lardiCompany;
+    //     return new LardiCompany(firmCode, name, rating, refId);
+    // }
+
     @Get('lardi-trans/search')
     async search(@Query('code') code: string): Promise<LardiCompany> {
-        const rawCompanies: RawLardiCompanyInterface[] = await this.lardiTransService.search(code);
-        const lardiCompany = rawCompanies.find((company) => company.firmCode === code);
-        if (!lardiCompany) {
-            return {} as LardiCompany;
+        const rawCompanies: RawLardiCompanyInterface[] = await this.lardiTransService.searchByCode(
+            code
+        );
+
+        for (const company of rawCompanies) {
+            const lardiCompany = await this.lardiTransService.searchByRef(company.refId);
+            if (lardiCompany.firmCode === code) {
+                const { name, firmCode, rating, refId } = lardiCompany;
+                return new LardiCompany(firmCode, name, rating, refId);
+            }
         }
-        const { name, firmCode, rating, refId } = lardiCompany;
-        return new LardiCompany(firmCode, name, rating, refId);
+
+        return {} as LardiCompany;
     }
     //
     // @Post('autos')
