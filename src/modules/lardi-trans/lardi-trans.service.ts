@@ -20,7 +20,7 @@ export class LardiTransService {
             },
         };
         return this.httpService
-            .get(`https://api.lardi-trans.com/v2/users/search?language=en&query="${code}"`, options)
+            .get(`https://api.lardi-trans.com/v2/users/search?query=${code}`, options)
             .pipe(map((axiosResponse: AxiosResponse) => axiosResponse.data))
             .toPromise();
     }
